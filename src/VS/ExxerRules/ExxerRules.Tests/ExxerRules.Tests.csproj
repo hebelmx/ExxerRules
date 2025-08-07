@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ExxerRules.Tests</RootNamespace>
+    <AssemblyName>ExxerRules.Tests</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Shouldly" Version="4.2.1" />
+    <PackageReference Include="NSubstitute" Version="5.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ExxerRules.Analyzers\ExxerRules.Analyzers.csproj" />
+    <ProjectReference Include="..\ExxerRules.CodeFixes\ExxerRules.CodeFixes.csproj" />
+  </ItemGroup>
+
+</Project>

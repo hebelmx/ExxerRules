@@ -1,0 +1,13 @@
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\bin\Debug\netstandard2.0\ExxerRules.Analyzers.deps.json
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\bin\Debug\netstandard2.0\ExxerRules.Analyzers.dll
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\bin\Debug\netstandard2.0\ExxerRules.Analyzers.pdb
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\bin\Debug\netstandard2.0\ExxerRules.Analyzers.xml
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\obj\Debug\netstandard2.0\ExxerRules.Analyzers.csproj.AssemblyReference.cache
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\obj\Debug\netstandard2.0\ExxerRules.Analyzers.GeneratedMSBuildEditorConfig.editorconfig
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\obj\Debug\netstandard2.0\ExxerRules.Analyzers.AssemblyInfoInputs.cache
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\obj\Debug\netstandard2.0\ExxerRules.Analyzers.AssemblyInfo.cs
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\obj\Debug\netstandard2.0\ExxerRules.Analyzers.csproj.CoreCompileInputs.cache
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\obj\Debug\netstandard2.0\ExxerRules.Analyzers.sourcelink.json
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\obj\Debug\netstandard2.0\ExxerRules.Analyzers.dll
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\obj\Debug\netstandard2.0\ExxerRules.Analyzers.xml
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.Analyzers\obj\Debug\netstandard2.0\ExxerRules.Analyzers.pdb

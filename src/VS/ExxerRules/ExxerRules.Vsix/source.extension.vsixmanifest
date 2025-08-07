@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="ExxerRules.Analyzers.52e433b3-3478-4c2b-934c-96fdebedb77e" Version="1.0" Language="en-US" Publisher="ExxerAI" />
+    <DisplayName>ExxerRules Analyzers</DisplayName>
+    <Description xml:space="preserve">Roslyn analyzers for enforcing ExxerAI coding standards and best practices including Result pattern, testing standards, and clean architecture.</Description>
+    <MoreInfo>https://github.com/exxerai/exxerrules</MoreInfo>
+    <License>LICENSE.txt</License>
+    <Tags>analyzers, roslyn, csharp, dotnet, exxerai, result-pattern, clean-architecture</Tags>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">
+      <ProductArchitecture>arm64</ProductArchitecture>
+    </InstallationTarget>
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ExxerRules.Analyzers" Path="|ExxerRules.Analyzers|" />
+    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="ExxerRules.Analyzers" Path="|ExxerRules.Analyzers|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ExxerRules.CodeFixes" Path="|ExxerRules.CodeFixes|" />
+    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="ExxerRules.CodeFixes" Path="|ExxerRules.CodeFixes|" />
+  </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[17.0,18.0)" DisplayName="Roslyn Language Services" />
+  </Prerequisites>
+</PackageManifest>

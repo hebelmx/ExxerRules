@@ -1,0 +1,17 @@
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\bin\Debug\netstandard2.0\ExxerRules.CodeFixes.deps.json
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\bin\Debug\netstandard2.0\ExxerRules.CodeFixes.dll
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\bin\Debug\netstandard2.0\ExxerRules.CodeFixes.pdb
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\bin\Debug\netstandard2.0\ExxerRules.CodeFixes.xml
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\bin\Debug\netstandard2.0\ExxerRules.Analyzers.dll
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\bin\Debug\netstandard2.0\ExxerRules.Analyzers.pdb
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\bin\Debug\netstandard2.0\ExxerRules.Analyzers.xml
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\obj\Debug\netstandard2.0\ExxerRules.CodeFixes.csproj.AssemblyReference.cache
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\obj\Debug\netstandard2.0\ExxerRules.CodeFixes.GeneratedMSBuildEditorConfig.editorconfig
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\obj\Debug\netstandard2.0\ExxerRules.CodeFixes.AssemblyInfoInputs.cache
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\obj\Debug\netstandard2.0\ExxerRules.CodeFixes.AssemblyInfo.cs
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\obj\Debug\netstandard2.0\ExxerRules.CodeFixes.csproj.CoreCompileInputs.cache
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\obj\Debug\netstandard2.0\ExxerRules.CodeFixes.sourcelink.json
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\obj\Debug\netstandard2.0\ExxerRul.0CCD4658.Up2Date
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\obj\Debug\netstandard2.0\ExxerRules.CodeFixes.dll
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\obj\Debug\netstandard2.0\ExxerRules.CodeFixes.xml
+F:\Dynamic\ExxerRules\ExxerRules\src\vs\ExxerRules\ExxerRules.CodeFixes\obj\Debug\netstandard2.0\ExxerRules.CodeFixes.pdb

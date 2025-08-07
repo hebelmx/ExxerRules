@@ -1,7 +1,20 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "F:\\Dynamic\\ExxerRules\\ExxerRules\\src\\VS\\ExxerRules\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D7F7C3D7-2D7E-4F7E-AF7E-7F7E7F7E7F7E}|ExxerRules.Tests\\ExxerRules.Tests.csproj|f:\\dynamic\\exxerrules\\exxerrules\\src\\vs\\exxerrules\\exxerrules.tests\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D7F7C3D7-2D7E-4F7E-AF7E-7F7E7F7E7F7E}|ExxerRules.Tests\\ExxerRules.Tests.csproj|solutionrelative:exxerrules.tests\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D7F7C3D7-2D7E-4F7E-AF7E-7F7E7F7E7F7E}|ExxerRules.Tests\\ExxerRules.Tests.csproj|f:\\dynamic\\exxerrules\\exxerrules\\src\\vs\\exxerrules\\exxerrules.tests\\manualtestrunner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D7F7C3D7-2D7E-4F7E-AF7E-7F7E7F7E7F7E}|ExxerRules.Tests\\ExxerRules.Tests.csproj|solutionrelative:exxerrules.tests\\manualtestrunner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C6E6B2C6-1C6D-4E6D-9E6D-6E6D6E6D6E6D}|ExxerRules.CodeFixes\\ExxerRules.CodeFixes.csproj|f:\\dynamic\\exxerrules\\exxerrules\\src\\vs\\exxerrules\\exxerrules.codefixes\\errorhandling\\useresultpatterncodefixprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C6E6B2C6-1C6D-4E6D-9E6D-6E6D6E6D6E6D}|ExxerRules.CodeFixes\\ExxerRules.CodeFixes.csproj|solutionrelative:exxerrules.codefixes\\errorhandling\\useresultpatterncodefixprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 997,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 26,
           "Children": [
             {
               "$type": "Bookmark",
@@ -116,12 +129,51 @@
               "Name": "ST:0:0:{5e385563-b223-56a3-bc93-275ed7d58a3a}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "F:\\Dynamic\\ExxerRules\\ExxerRules\\src\\VS\\ExxerRules\\ExxerRules.Tests\\Program.cs",
+              "RelativeDocumentMoniker": "ExxerRules.Tests\\Program.cs",
+              "ToolTip": "F:\\Dynamic\\ExxerRules\\ExxerRules\\src\\VS\\ExxerRules\\ExxerRules.Tests\\Program.cs",
+              "RelativeToolTip": "ExxerRules.Tests\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-07T02:55:21.063Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ManualTestRunner.cs",
+              "DocumentMoniker": "F:\\Dynamic\\ExxerRules\\ExxerRules\\src\\VS\\ExxerRules\\ExxerRules.Tests\\ManualTestRunner.cs",
+              "RelativeDocumentMoniker": "ExxerRules.Tests\\ManualTestRunner.cs",
+              "ToolTip": "F:\\Dynamic\\ExxerRules\\ExxerRules\\src\\VS\\ExxerRules\\ExxerRules.Tests\\ManualTestRunner.cs",
+              "RelativeToolTip": "ExxerRules.Tests\\ManualTestRunner.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAF4CAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-07T02:51:52.682Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UseResultPatternCodeFixProvider.cs",
+              "DocumentMoniker": "F:\\Dynamic\\ExxerRules\\ExxerRules\\src\\VS\\ExxerRules\\ExxerRules.CodeFixes\\ErrorHandling\\UseResultPatternCodeFixProvider.cs",
+              "RelativeDocumentMoniker": "ExxerRules.CodeFixes\\ErrorHandling\\UseResultPatternCodeFixProvider.cs",
+              "ToolTip": "F:\\Dynamic\\ExxerRules\\ExxerRules\\src\\VS\\ExxerRules\\ExxerRules.CodeFixes\\ErrorHandling\\UseResultPatternCodeFixProvider.cs",
+              "RelativeToolTip": "ExxerRules.CodeFixes\\ErrorHandling\\UseResultPatternCodeFixProvider.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAIA4wCIAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-07T02:07:53.993Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{da1e233c-cfa8-5021-b06c-abc3d02f44e8}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         },

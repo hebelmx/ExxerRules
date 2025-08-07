@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ExxerRules.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:ExxerRules.Tests.ManualTestRunner">
+            <summary>
+            Manual test runner to verify analyzer functionality without XUnit framework issues.
+            This follows TDD principles by creating tests we can make pass.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_TestMethodFollowsNamingConvention">
+            <summary>
+            Tests that valid test naming convention does not report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_ReportDiagnostic_When_TestMethodDoesNotFollowNamingConvention">
+            <summary>
+            Tests that invalid test naming convention reports diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.RunAnalyzer(System.String,Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer)">
+            <summary>
+            Runs a diagnostic analyzer on the given source code.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_ReportDiagnostic_When_MethodLacksNullParameterValidation">
+            <summary>
+            Tests that null parameter validation is reported when missing.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_MethodHasNullParameterValidation">
+            <summary>
+            Tests that proper null parameter validation does not report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_MethodHasNoReferenceParameters">
+            <summary>
+            Tests that methods with no reference parameters don't report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_ReportDiagnostic_When_AsyncMethodLacksCancellationToken">
+            <summary>
+            Tests that async methods without CancellationToken report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_AsyncMethodHasCancellationToken">
+            <summary>
+            Tests that async methods with CancellationToken do not report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_MethodIsNotAsyncNamed">
+            <summary>
+            Tests that non-async methods do not report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_AsyncVoidEventHandler">
+            <summary>
+            Tests that async void methods (event handlers) do not report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_ReportDiagnostic_When_PublicMemberLacksXmlDocumentation">
+            <summary>
+            Tests that public members without XML documentation report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_PublicMemberHasXmlDocumentation">
+            <summary>
+            Tests that public members with XML documentation do not report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_MemberIsNotPublic">
+            <summary>
+            Tests that non-public members do not report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_ReportDiagnostic_When_PublicPropertyLacksXmlDocumentation">
+            <summary>
+            Tests that public properties without XML documentation report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.DebugXmlDocumentationAnalyzer">
+            <summary>
+            Debug helper to understand XML documentation detection issues.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.RunAllTests">
+            <summary>
+            Runs all manual tests and reports results.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_ReportDiagnostic_When_MagicNumbersAreUsed">
+            <summary>
+            Tests that magic numbers report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_ReportDiagnostic_When_MagicStringsAreUsed">
+            <summary>
+            Tests that magic strings report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_NamedConstantsAreUsed">
+            <summary>
+            Tests that named constants do not report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_CommonNumbersAreUsed">
+            <summary>
+            Tests that common numbers (0, 1, -1, etc.) do not report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_ReportDiagnostic_When_RegionsAreUsed">
+            <summary>
+            Tests that regions report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_NoRegionsAreUsed">
+            <summary>
+            Tests that code without regions does not report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_ReportDiagnostic_When_StringConcatenationIsUsedInLogging">
+            <summary>
+            Tests that string concatenation in logging reports diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_StructuredLoggingIsUsed">
+            <summary>
+            Tests that structured logging does not report diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_ReportDiagnostic_When_ConsoleWriteLineIsUsed">
+            <summary>
+            Tests that Console.WriteLine usage reports diagnostic.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.ManualTestRunner.Should_NotReportDiagnostic_When_ProperLoggingIsUsedInsteadOfConsole">
+            <summary>
+            Tests that proper logging does not report diagnostic.
+            </summary>
+        </member>
+        <member name="T:ExxerRules.Tests.Program">
+            <summary>
+            Simple console program to run manual tests following TDD principles.
+            </summary>
+        </member>
+    </members>
+</doc>
