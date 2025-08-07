@@ -90,7 +90,19 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
 		if (namespaceName == null)
 			return;
 
-		// Check for forbidden testing framework namespaces
+		// TDD Fix: Detect XUnit v2 but allow XUnit v3
+		if (namespaceName == "Xunit")
+		{
+			// Report diagnostic for XUnit v2 (should upgrade to v3)
+			var diagnostic = Diagnostic.Create(
+				Rule,
+				usingDirective.GetLocation(),
+				"XUnit v2");
+			context.ReportDiagnostic(diagnostic);
+			return;
+		}
+
+		// Check for other forbidden testing framework namespaces
 		var forbiddenNamespaces = new[]
 		{
 			"Microsoft.VisualStudio.TestTools.UnitTesting",

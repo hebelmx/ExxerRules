@@ -16,6 +16,11 @@ public static class DiagnosticIds
 	/// </summary>
 	public const string AvoidThrowingExceptions = "EXXER002";
 
+	/// <summary>
+	/// Do not throw exceptions - use Result&lt;T&gt; pattern instead.
+	/// </summary>
+	public const string DoNotThrowExceptions = "EXXER003";
+
 	// Testing (EXXER100-EXXER199)
 	/// <summary>
 	/// Test methods should follow naming convention: Should_Action_When_Condition.
@@ -118,6 +123,11 @@ public static class DiagnosticIds
 	/// </summary>
 	public const string DisposeResourcesProperly = "EXXER701";
 
+	/// <summary>
+	/// Use modern pattern matching with declaration patterns.
+	/// </summary>
+	public const string UseModernPatternMatching = "EXXER702";
+
 	// Logging (EXXER800-EXXER899)
 	/// <summary>
 	/// Use structured logging instead of string concatenation.
@@ -128,4 +138,15 @@ public static class DiagnosticIds
 	/// Do not use Console.WriteLine in production code.
 	/// </summary>
 	public const string DoNotUseConsoleWriteLine = "EXXER801";
+
+	// Code Formatting (EXXER900-EXXER999)
+	/// <summary>
+	/// Format project using dotnet format command.
+	/// </summary>
+	public const string ProjectFormatting = "EXXER900";
+
+	/// <summary>
+	/// Code formatting inconsistency detected.
+	/// </summary>
+	public const string CodeFormattingIssue = "EXXER901";
 }

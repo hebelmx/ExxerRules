@@ -5,7 +5,9 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <IsPackable>false</IsPackable>
+    <IsPackable>true</IsPackable>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ExxerRules.CodeFixes</RootNamespace>
     <AssemblyName>ExxerRules.CodeFixes</AssemblyName>
   </PropertyGroup>

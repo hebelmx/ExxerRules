@@ -4,6 +4,30 @@
         <name>ExxerRules.Analyzers</name>
     </assembly>
     <members>
+        <member name="T:ExxerRules.Analyzers.Architecture.DomainShouldNotReferenceInfrastructureAnalyzer">
+            <summary>
+            Analyzer that enforces Domain layer should not reference Infrastructure layer.
+            Supports Clean Architecture principles.
+            </summary>
+        </member>
+        <member name="P:ExxerRules.Analyzers.Architecture.DomainShouldNotReferenceInfrastructureAnalyzer.SupportedDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:ExxerRules.Analyzers.Architecture.DomainShouldNotReferenceInfrastructureAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ExxerRules.Analyzers.Architecture.UseRepositoryPatternAnalyzer">
+            <summary>
+            Analyzer that enforces using Repository pattern with focused interfaces.
+            Supports Clean Architecture and dependency inversion principles.
+            </summary>
+        </member>
+        <member name="P:ExxerRules.Analyzers.Architecture.UseRepositoryPatternAnalyzer.SupportedDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:ExxerRules.Analyzers.Architecture.UseRepositoryPatternAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
+            <inheritdoc/>
+        </member>
         <member name="T:ExxerRules.Analyzers.Async.AsyncMethodsShouldAcceptCancellationTokenAnalyzer">
             <summary>
             Analyzer that enforces CancellationToken parameters in async methods.
@@ -14,6 +38,18 @@
             <inheritdoc/>
         </member>
         <member name="M:ExxerRules.Analyzers.Async.AsyncMethodsShouldAcceptCancellationTokenAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ExxerRules.Analyzers.Async.UseConfigureAwaitFalseAnalyzer">
+            <summary>
+            Analyzer that enforces using ConfigureAwait(false) in library code.
+            Supports the performance and async best practices principles.
+            </summary>
+        </member>
+        <member name="P:ExxerRules.Analyzers.Async.UseConfigureAwaitFalseAnalyzer.SupportedDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:ExxerRules.Analyzers.Async.UseConfigureAwaitFalseAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
             <inheritdoc/>
         </member>
         <member name="T:ExxerRules.Analyzers.CodeQuality.AvoidMagicNumbersAndStringsAnalyzer">
@@ -279,6 +315,11 @@
             Category for logging related diagnostics.
             </summary>
         </member>
+        <member name="F:ExxerRules.Analyzers.DiagnosticCategories.FunctionalPatterns">
+            <summary>
+            Category for functional programming pattern diagnostics.
+            </summary>
+        </member>
         <member name="T:ExxerRules.Analyzers.DiagnosticIds">
             <summary>
             Defines diagnostic IDs for ExxerRules analyzers.
@@ -292,6 +333,11 @@
         <member name="F:ExxerRules.Analyzers.DiagnosticIds.AvoidThrowingExceptions">
             <summary>
             Exception throwing detected in method that should return Result&lt;T&gt;.
+            </summary>
+        </member>
+        <member name="F:ExxerRules.Analyzers.DiagnosticIds.DoNotThrowExceptions">
+            <summary>
+            Do not throw exceptions - use Result&lt;T&gt; pattern instead.
             </summary>
         </member>
         <member name="F:ExxerRules.Analyzers.DiagnosticIds.TestNamingConvention">
@@ -389,6 +435,11 @@
             Dispose resources properly with using statements.
             </summary>
         </member>
+        <member name="F:ExxerRules.Analyzers.DiagnosticIds.UseModernPatternMatching">
+            <summary>
+            Use modern pattern matching with declaration patterns.
+            </summary>
+        </member>
         <member name="F:ExxerRules.Analyzers.DiagnosticIds.UseStructuredLogging">
             <summary>
             Use structured logging instead of string concatenation.
@@ -433,6 +484,18 @@
         <member name="M:ExxerRules.Analyzers.ErrorHandling.UseResultPatternAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
             <inheritdoc/>
         </member>
+        <member name="T:ExxerRules.Analyzers.FunctionalPatterns.DoNotThrowExceptionsAnalyzer">
+            <summary>
+            Analyzer that enforces Result&lt;T&gt; pattern instead of throwing exceptions.
+            Supports the core architectural principle of functional error handling.
+            </summary>
+        </member>
+        <member name="P:ExxerRules.Analyzers.FunctionalPatterns.DoNotThrowExceptionsAnalyzer.SupportedDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:ExxerRules.Analyzers.FunctionalPatterns.DoNotThrowExceptionsAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
+            <inheritdoc/>
+        </member>
         <member name="T:ExxerRules.Analyzers.Logging.DoNotUseConsoleWriteLineAnalyzer">
             <summary>
             Analyzer that enforces not using Console.WriteLine in production code.
@@ -457,6 +520,30 @@
         <member name="M:ExxerRules.Analyzers.Logging.UseStructuredLoggingAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
             <inheritdoc/>
         </member>
+        <member name="T:ExxerRules.Analyzers.ModernCSharp.UseExpressionBodiedMembersAnalyzer">
+            <summary>
+            Analyzer that enforces using expression-bodied members where appropriate.
+            Supports the modern C# coding standards.
+            </summary>
+        </member>
+        <member name="P:ExxerRules.Analyzers.ModernCSharp.UseExpressionBodiedMembersAnalyzer.SupportedDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:ExxerRules.Analyzers.ModernCSharp.UseExpressionBodiedMembersAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ExxerRules.Analyzers.ModernCSharp.UseModernPatternMatchingAnalyzer">
+            <summary>
+            Analyzer that enforces using modern pattern matching with declaration patterns.
+            Supports the modern C# coding standards.
+            </summary>
+        </member>
+        <member name="P:ExxerRules.Analyzers.ModernCSharp.UseModernPatternMatchingAnalyzer.SupportedDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:ExxerRules.Analyzers.ModernCSharp.UseModernPatternMatchingAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
+            <inheritdoc/>
+        </member>
         <member name="T:ExxerRules.Analyzers.NullSafety.ValidateNullParametersAnalyzer">
             <summary>
             Analyzer that enforces null parameter validation at method entry points.
@@ -467,6 +554,18 @@
             <inheritdoc/>
         </member>
         <member name="M:ExxerRules.Analyzers.NullSafety.ValidateNullParametersAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ExxerRules.Analyzers.Performance.UseEfficientLinqAnalyzer">
+            <summary>
+            Analyzer that enforces efficient LINQ operations to avoid multiple enumerations.
+            Supports the performance optimization principles.
+            </summary>
+        </member>
+        <member name="P:ExxerRules.Analyzers.Performance.UseEfficientLinqAnalyzer.SupportedDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:ExxerRules.Analyzers.Performance.UseEfficientLinqAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
             <inheritdoc/>
         </member>
         <member name="T:ExxerRules.Analyzers.Testing.DoNotMockDbContextAnalyzer">
@@ -480,6 +579,30 @@
         <member name="M:ExxerRules.Analyzers.Testing.DoNotMockDbContextAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
             <inheritdoc/>
         </member>
+        <member name="T:ExxerRules.Analyzers.Testing.DoNotUseFluentAssertionsAnalyzer">
+            <summary>
+            Analyzer that enforces using Shouldly instead of FluentAssertions for test assertions.
+            Supports the testing standards compliance principle.
+            </summary>
+        </member>
+        <member name="P:ExxerRules.Analyzers.Testing.DoNotUseFluentAssertionsAnalyzer.SupportedDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:ExxerRules.Analyzers.Testing.DoNotUseFluentAssertionsAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ExxerRules.Analyzers.Testing.DoNotUseMoqAnalyzer">
+            <summary>
+            Analyzer that enforces using NSubstitute instead of Moq for mocking.
+            Supports the testing standards compliance principle.
+            </summary>
+        </member>
+        <member name="P:ExxerRules.Analyzers.Testing.DoNotUseMoqAnalyzer.SupportedDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:ExxerRules.Analyzers.Testing.DoNotUseMoqAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
+            <inheritdoc/>
+        </member>
         <member name="T:ExxerRules.Analyzers.Testing.TestNamingConventionAnalyzer">
             <summary>
             Analyzer that enforces test naming convention: Should_Action_When_Condition.
@@ -489,28 +612,6 @@
             <inheritdoc/>
         </member>
         <member name="M:ExxerRules.Analyzers.Testing.TestNamingConventionAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
-            <inheritdoc/>
-        </member>
-        <member name="T:ExxerRules.Analyzers.Testing.UseNSubstituteAnalyzer">
-            <summary>
-            Analyzer that enforces NSubstitute usage instead of Moq for mocking.
-            </summary>
-        </member>
-        <member name="P:ExxerRules.Analyzers.Testing.UseNSubstituteAnalyzer.SupportedDiagnostics">
-            <inheritdoc/>
-        </member>
-        <member name="M:ExxerRules.Analyzers.Testing.UseNSubstituteAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
-            <inheritdoc/>
-        </member>
-        <member name="T:ExxerRules.Analyzers.Testing.UseShouldlyAnalyzer">
-            <summary>
-            Analyzer that enforces Shouldly usage instead of FluentAssertions.
-            </summary>
-        </member>
-        <member name="P:ExxerRules.Analyzers.Testing.UseShouldlyAnalyzer.SupportedDiagnostics">
-            <inheritdoc/>
-        </member>
-        <member name="M:ExxerRules.Analyzers.Testing.UseShouldlyAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
             <inheritdoc/>
         </member>
         <member name="T:ExxerRules.Analyzers.Testing.UseXUnitV3Analyzer">

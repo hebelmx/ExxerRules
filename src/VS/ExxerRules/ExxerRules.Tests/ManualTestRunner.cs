@@ -7,6 +7,10 @@ using ExxerRules.Analyzers.Async;
 using ExxerRules.Analyzers.Documentation;
 using ExxerRules.Analyzers.CodeQuality;
 using ExxerRules.Analyzers.Logging;
+using ExxerRules.Analyzers.FunctionalPatterns;
+using ExxerRules.Analyzers.Performance;
+using ExxerRules.Analyzers.ModernCSharp;
+using ExxerRules.Analyzers.Architecture;
 using ExxerRules.Analyzers;
 using System.Collections.Immutable;
 using System.Linq;
@@ -645,7 +649,75 @@ namespace TestProject
 			("Should_ReportDiagnostic_When_ConsoleWriteLineIsUsed",
 			 (Func<bool>)Should_ReportDiagnostic_When_ConsoleWriteLineIsUsed),
 			("Should_NotReportDiagnostic_When_ProperLoggingIsUsedInsteadOfConsole",
-			 (Func<bool>)Should_NotReportDiagnostic_When_ProperLoggingIsUsedInsteadOfConsole)
+			 (Func<bool>)Should_NotReportDiagnostic_When_ProperLoggingIsUsedInsteadOfConsole),
+
+			// Result<T> Pattern Enforcement Tests (EXXER003)
+			("Should_ReportDiagnostic_When_ThrowStatementIsUsed",
+			 (Func<bool>)Should_ReportDiagnostic_When_ThrowStatementIsUsed),
+			("Should_NotReportDiagnostic_When_ReturningResult",
+			 (Func<bool>)Should_NotReportDiagnostic_When_ReturningResult),
+			("Should_ReportDiagnostic_When_ThrowingInsteadOfReturningResult",
+			 (Func<bool>)Should_ReportDiagnostic_When_ThrowingInsteadOfReturningResult),
+			("Should_NotReportDiagnostic_When_UsingResultPattern",
+			 (Func<bool>)Should_NotReportDiagnostic_When_UsingResultPattern),
+
+			// Testing Standards Compliance Tests (EXXER600-699)
+			("Should_ReportDiagnostic_When_UsingMoq",
+			 (Func<bool>)Should_ReportDiagnostic_When_UsingMoq),
+			("Should_NotReportDiagnostic_When_UsingNSubstitute",
+			 (Func<bool>)Should_NotReportDiagnostic_When_UsingNSubstitute),
+			("Should_ReportDiagnostic_When_UsingFluentAssertions",
+			 (Func<bool>)Should_ReportDiagnostic_When_UsingFluentAssertions),
+			("Should_NotReportDiagnostic_When_UsingShouldly",
+			 (Func<bool>)Should_NotReportDiagnostic_When_UsingShouldly),
+
+			// Additional Testing Standards Tests (XUnit v3, DbContext)
+			("Should_ReportDiagnostic_When_UsingXUnitV2",
+			 (Func<bool>)Should_ReportDiagnostic_When_UsingXUnitV2),
+			("Should_NotReportDiagnostic_When_UsingXUnitV3",
+			 (Func<bool>)Should_NotReportDiagnostic_When_UsingXUnitV3),
+			("Should_ReportDiagnostic_When_MockingDbContext",
+			 (Func<bool>)Should_ReportDiagnostic_When_MockingDbContext),
+			("Should_NotReportDiagnostic_When_UsingInMemoryDbContext",
+			 (Func<bool>)Should_NotReportDiagnostic_When_UsingInMemoryDbContext),
+
+			// Performance Pattern Tests (ConfigureAwait, LINQ)
+			("Should_ReportDiagnostic_When_AwaitWithoutConfigureAwait",
+			 (Func<bool>)Should_ReportDiagnostic_When_AwaitWithoutConfigureAwait),
+			("Should_NotReportDiagnostic_When_AwaitWithConfigureAwait",
+			 (Func<bool>)Should_NotReportDiagnostic_When_AwaitWithConfigureAwait),
+			("Should_ReportDiagnostic_When_UsingInEfficientLinq",
+			 (Func<bool>)Should_ReportDiagnostic_When_UsingInEfficientLinq),
+			("Should_NotReportDiagnostic_When_UsingEfficientLinq",
+			 (Func<bool>)Should_NotReportDiagnostic_When_UsingEfficientLinq),
+
+			// Modern C# Feature Tests (EXXER501, EXXER702)
+			("Should_ReportDiagnostic_When_MethodCanUseExpressionBody",
+			 (Func<bool>)Should_ReportDiagnostic_When_MethodCanUseExpressionBody),
+			("Should_NotReportDiagnostic_When_MethodAlreadyUsesExpressionBody",
+			 (Func<bool>)Should_NotReportDiagnostic_When_MethodAlreadyUsesExpressionBody),
+			("Should_ReportDiagnostic_When_PropertyCanUseExpressionBody",
+			 (Func<bool>)Should_ReportDiagnostic_When_PropertyCanUseExpressionBody),
+			("Should_NotReportDiagnostic_When_PropertyAlreadyUsesExpressionBody",
+			 (Func<bool>)Should_NotReportDiagnostic_When_PropertyAlreadyUsesExpressionBody),
+			("Should_ReportDiagnostic_When_UsingOldPatternMatching",
+			 (Func<bool>)Should_ReportDiagnostic_When_UsingOldPatternMatching),
+			("Should_NotReportDiagnostic_When_UsingModernPatternMatching",
+			 (Func<bool>)Should_NotReportDiagnostic_When_UsingModernPatternMatching),
+
+			// Architecture Layer Validation Tests (EXXER600-699)
+			("Should_ReportDiagnostic_When_DomainReferencesInfrastructure",
+			 (Func<bool>)Should_ReportDiagnostic_When_DomainReferencesInfrastructure),
+			("Should_NotReportDiagnostic_When_DomainReferencesOnlyAllowedLayers",
+			 (Func<bool>)Should_NotReportDiagnostic_When_DomainReferencesOnlyAllowedLayers),
+			("Should_ReportDiagnostic_When_NotUsingRepositoryPattern",
+			 (Func<bool>)Should_ReportDiagnostic_When_NotUsingRepositoryPattern),
+			("Should_NotReportDiagnostic_When_UsingRepositoryPattern",
+			 (Func<bool>)Should_NotReportDiagnostic_When_UsingRepositoryPattern),
+			("Should_ReportDiagnostic_When_RepositoryLacksInterface",
+			 (Func<bool>)Should_ReportDiagnostic_When_RepositoryLacksInterface),
+			("Should_NotReportDiagnostic_When_RepositoryHasInterface",
+			 (Func<bool>)Should_NotReportDiagnostic_When_RepositoryHasInterface)
 		};
 
 		var passed = 0;
@@ -1111,5 +1183,622 @@ namespace TestProject
 
 		// Assert - No diagnostics should be reported for proper logging
 		return relevantDiagnostics.Length == 0;
+	}
+
+	// Result<T> Pattern Enforcement Tests (EXXER100)
+	private static bool Should_ReportDiagnostic_When_ThrowStatementIsUsed()
+	{
+		const string testCode = @"
+using System;
+
+public class TestClass
+{
+	public void TestMethod()
+	{
+		throw new ArgumentException(""This should be flagged"");
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DoNotThrowExceptionsAnalyzer());
+
+		return diagnostics.Length == 1 && diagnostics[0].Id == DiagnosticIds.DoNotThrowExceptions;
+	}
+
+	private static bool Should_NotReportDiagnostic_When_ReturningResult()
+	{
+		const string testCode = @"
+using FluentResults;
+
+public class TestClass
+{
+	public Result TestMethod()
+	{
+		return Result.Fail(""Error occurred"");
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DoNotThrowExceptionsAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	private static bool Should_ReportDiagnostic_When_ThrowingInsteadOfReturningResult()
+	{
+		const string testCode = @"
+using System;
+
+public class TestClass
+{
+	public string ProcessData(string input)
+	{
+		if (string.IsNullOrEmpty(input))
+			throw new ArgumentNullException(nameof(input));
+
+		return input.ToUpper();
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DoNotThrowExceptionsAnalyzer());
+
+		return diagnostics.Length == 1 && diagnostics[0].Id == DiagnosticIds.DoNotThrowExceptions;
+	}
+
+	private static bool Should_NotReportDiagnostic_When_UsingResultPattern()
+	{
+		const string testCode = @"
+using FluentResults;
+
+public class TestClass
+{
+	public Result<string> ProcessData(string input)
+	{
+		if (string.IsNullOrEmpty(input))
+			return Result.Fail<string>(""Input cannot be null or empty"");
+
+		return Result.Ok(input.ToUpper());
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DoNotThrowExceptionsAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	// Testing Standards Compliance Tests (EXXER600-699)
+	private static bool Should_ReportDiagnostic_When_UsingMoq()
+	{
+		const string testCode = @"
+using Moq;
+using System;
+
+public class TestClass
+{
+	public void TestMethod()
+	{
+		var mock = new Mock<IService>();
+		mock.Setup(x => x.DoSomething()).Returns(""test"");
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DoNotUseMoqAnalyzer());
+
+		return diagnostics.Length == 1 && diagnostics[0].Id == DiagnosticIds.UseNSubstitute;
+	}
+
+	private static bool Should_NotReportDiagnostic_When_UsingNSubstitute()
+	{
+		const string testCode = @"
+using NSubstitute;
+
+public class TestClass
+{
+	public void TestMethod()
+	{
+		var substitute = Substitute.For<IService>();
+		substitute.DoSomething().Returns(""test"");
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DoNotUseMoqAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	private static bool Should_ReportDiagnostic_When_UsingFluentAssertions()
+	{
+		const string testCode = @"
+using FluentAssertions;
+
+public class TestClass
+{
+	public void TestMethod()
+	{
+		var result = ""test"";
+		result.Should().Be(""test"");
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
+
+		return diagnostics.Length == 1 && diagnostics[0].Id == DiagnosticIds.UseShouldly;
+	}
+
+	private static bool Should_NotReportDiagnostic_When_UsingShouldly()
+	{
+		const string testCode = @"
+using Shouldly;
+
+public class TestClass
+{
+	public void TestMethod()
+	{
+		var result = ""test"";
+		result.ShouldBe(""test"");
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	// Additional Testing Standards Tests (EXXER600-699)
+	private static bool Should_ReportDiagnostic_When_UsingXUnitV2()
+	{
+		const string testCode = @"
+using Xunit;
+
+public class TestClass
+{
+	[Fact]
+	public void TestMethod()
+	{
+		Assert.True(true);
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseXUnitV3Analyzer());
+
+		return diagnostics.Length == 1 && diagnostics[0].Id == DiagnosticIds.UseXUnitV3;
+	}
+
+	private static bool Should_NotReportDiagnostic_When_UsingXUnitV3()
+	{
+		const string testCode = @"
+using Xunit.v3;
+
+public class TestClass
+{
+	[Fact]
+	public void TestMethod()
+	{
+		Assert.True(true);
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseXUnitV3Analyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	private static bool Should_ReportDiagnostic_When_MockingDbContext()
+	{
+		const string testCode = @"
+using Microsoft.EntityFrameworkCore;
+using Moq;
+
+public class TestClass
+{
+	public void TestMethod()
+	{
+		var mockContext = new Mock<DbContext>();
+		mockContext.Setup(x => x.SaveChanges()).Returns(1);
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DoNotMockDbContextAnalyzer());
+
+		return diagnostics.Length == 1 && diagnostics[0].Id == DiagnosticIds.DoNotMockDbContext;
+	}
+
+	private static bool Should_NotReportDiagnostic_When_UsingInMemoryDbContext()
+	{
+		const string testCode = @"
+using Microsoft.EntityFrameworkCore;
+
+public class TestClass
+{
+	public void TestMethod()
+	{
+		var options = new DbContextOptionsBuilder<MyContext>()
+			.UseInMemoryDatabase(""TestDb"")
+			.Options;
+		var context = new MyContext(options);
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DoNotMockDbContextAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	// Performance Pattern Tests (EXXER1000-1099)
+	private static bool Should_ReportDiagnostic_When_AwaitWithoutConfigureAwait()
+	{
+		const string testCode = @"
+using System.Threading.Tasks;
+
+public class AsyncService
+{
+	public async Task ProcessDataAsync()
+	{
+		await SomeAsyncMethod(); // Missing ConfigureAwait(false)
+		await AnotherAsyncMethod(); // Missing ConfigureAwait(false)
+	}
+
+	private Task SomeAsyncMethod() => Task.CompletedTask;
+	private Task AnotherAsyncMethod() => Task.CompletedTask;
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+
+		return diagnostics.Length == 2 && diagnostics.All(d => d.Id == DiagnosticIds.UseConfigureAwaitFalse);
+	}
+
+	private static bool Should_NotReportDiagnostic_When_AwaitWithConfigureAwait()
+	{
+		const string testCode = @"
+using System.Threading.Tasks;
+
+public class AsyncService
+{
+	public async Task ProcessDataAsync()
+	{
+		await SomeAsyncMethod().ConfigureAwait(false);
+		await AnotherAsyncMethod().ConfigureAwait(false);
+	}
+
+	private Task SomeAsyncMethod() => Task.CompletedTask;
+	private Task AnotherAsyncMethod() => Task.CompletedTask;
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	private static bool Should_ReportDiagnostic_When_UsingInEfficientLinq()
+	{
+		const string testCode = @"
+using System.Linq;
+using System.Collections.Generic;
+
+public class DataProcessor
+{
+	public bool ProcessData(IEnumerable<int> data)
+	{
+		// Inefficient LINQ - multiple enumerations
+		return data.Any() && data.First() > 0;
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseEfficientLinqAnalyzer());
+
+		return diagnostics.Length == 1 && diagnostics[0].Id == DiagnosticIds.UseEfficientLinq;
+	}
+
+	private static bool Should_NotReportDiagnostic_When_UsingEfficientLinq()
+	{
+		const string testCode = @"
+using System.Linq;
+using System.Collections.Generic;
+
+public class DataProcessor
+{
+	public bool ProcessData(IEnumerable<int> data)
+	{
+		// Efficient LINQ - single enumeration
+		var firstItem = data.FirstOrDefault();
+		return firstItem > 0;
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseEfficientLinqAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	// Modern C# Feature Tests (EXXER501, EXXER702)
+	private static bool Should_ReportDiagnostic_When_MethodCanUseExpressionBody()
+	{
+		const string testCode = @"
+public class Calculator
+{
+	public int Add(int a, int b)
+	{
+		return a + b; // Can be expression-bodied
+	}
+
+	public string GetMessage()
+	{
+		return ""Hello World""; // Can be expression-bodied
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseExpressionBodiedMembersAnalyzer());
+
+		return diagnostics.Length == 2 && diagnostics.All(d => d.Id == DiagnosticIds.UseExpressionBodiedMembers);
+	}
+
+	private static bool Should_NotReportDiagnostic_When_MethodAlreadyUsesExpressionBody()
+	{
+		const string testCode = @"
+public class Calculator
+{
+	public int Add(int a, int b) => a + b;
+	public string GetMessage() => ""Hello World"";
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseExpressionBodiedMembersAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	private static bool Should_ReportDiagnostic_When_PropertyCanUseExpressionBody()
+	{
+		const string testCode = @"
+public class Person
+{
+	private string _name = ""Test"";
+
+	public string Name
+	{
+		get { return _name; } // Can be expression-bodied
+	}
+
+	public string FullName
+	{
+		get { return $""{_name} Lastname""; } // Can be expression-bodied
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseExpressionBodiedMembersAnalyzer());
+
+		return diagnostics.Length == 2 && diagnostics.All(d => d.Id == DiagnosticIds.UseExpressionBodiedMembers);
+	}
+
+	private static bool Should_NotReportDiagnostic_When_PropertyAlreadyUsesExpressionBody()
+	{
+		const string testCode = @"
+public class Person
+{
+	private string _name = ""Test"";
+
+	public string Name => _name;
+	public string FullName => $""{_name} Lastname"";
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseExpressionBodiedMembersAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	private static bool Should_ReportDiagnostic_When_UsingOldPatternMatching()
+	{
+		const string testCode = @"
+public class PatternMatcher
+{
+	public string ProcessValue(object value)
+	{
+		if (value is string)
+		{
+			return ((string)value).ToUpper(); // Old-style cast after is check
+		}
+
+		if (value is int)
+		{
+			return ((int)value).ToString(); // Old-style cast after is check
+		}
+
+		return ""Unknown"";
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseModernPatternMatchingAnalyzer());
+
+		return diagnostics.Length == 2 && diagnostics.All(d => d.Id == DiagnosticIds.UseModernPatternMatching);
+	}
+
+	private static bool Should_NotReportDiagnostic_When_UsingModernPatternMatching()
+	{
+		const string testCode = @"
+public class PatternMatcher
+{
+	public string ProcessValue(object value)
+	{
+		if (value is string str)
+		{
+			return str.ToUpper(); // Modern pattern matching with declaration
+		}
+
+		if (value is int number)
+		{
+			return number.ToString(); // Modern pattern matching with declaration
+		}
+
+		return ""Unknown"";
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseModernPatternMatchingAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	// Architecture Layer Validation Tests (EXXER600-699)
+	private static bool Should_ReportDiagnostic_When_DomainReferencesInfrastructure()
+	{
+		const string testCode = @"
+using System;
+using MyApp.Infrastructure.Data; // Domain should not reference Infrastructure
+using MyApp.Infrastructure.Email; // Domain should not reference Infrastructure
+
+namespace MyApp.Domain.Entities
+{
+	public class Order
+	{
+		private readonly IDbContext _context; // Direct infrastructure dependency
+
+		public Order(IDbContext context)
+		{
+			_context = context;
+		}
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DomainShouldNotReferenceInfrastructureAnalyzer());
+
+		return diagnostics.Length == 2 && diagnostics.All(d => d.Id == DiagnosticIds.DomainShouldNotReferenceInfrastructure);
+	}
+
+	private static bool Should_NotReportDiagnostic_When_DomainReferencesOnlyAllowedLayers()
+	{
+		const string testCode = @"
+using System;
+using MyApp.Domain.ValueObjects; // Domain can reference Domain
+using MyApp.Domain.Common; // Domain can reference Domain
+
+namespace MyApp.Domain.Entities
+{
+	public class Order
+	{
+		public OrderStatus Status { get; set; }
+		public Money Total { get; set; } // Value object reference is allowed
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new DomainShouldNotReferenceInfrastructureAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	private static bool Should_ReportDiagnostic_When_NotUsingRepositoryPattern()
+	{
+		const string testCode = @"
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace MyApp.Application.Services
+{
+	public class OrderService
+	{
+		private readonly DbContext _context;
+
+		public OrderService(DbContext context)
+		{
+			_context = context;
+		}
+
+		public List<Order> GetActiveOrders()
+		{
+			return _context.Set<Order>().Where(o => o.IsActive).ToList(); // Direct DbContext usage
+		}
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
+
+		return diagnostics.Length == 1 && diagnostics[0].Id == DiagnosticIds.UseRepositoryPattern;
+	}
+
+	private static bool Should_NotReportDiagnostic_When_UsingRepositoryPattern()
+	{
+		const string testCode = @"
+using System.Collections.Generic;
+
+namespace MyApp.Application.Services
+{
+	public class OrderService
+	{
+		private readonly IOrderRepository _orderRepository;
+
+		public OrderService(IOrderRepository orderRepository)
+		{
+			_orderRepository = orderRepository;
+		}
+
+		public List<Order> GetActiveOrders()
+		{
+			return _orderRepository.GetActiveOrders(); // Using repository pattern
+		}
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
+
+		return diagnostics.Length == 0;
+	}
+
+	private static bool Should_ReportDiagnostic_When_RepositoryLacksInterface()
+	{
+		const string testCode = @"
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace MyApp.Infrastructure.Data
+{
+	public class OrderRepository // Missing interface
+	{
+		private readonly DbContext _context;
+
+		public OrderRepository(DbContext context)
+		{
+			_context = context;
+		}
+
+		public List<Order> GetAll()
+		{
+			return _context.Set<Order>().ToList();
+		}
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
+
+		return diagnostics.Length == 1 && diagnostics[0].Id == DiagnosticIds.UseRepositoryPattern;
+	}
+
+	private static bool Should_NotReportDiagnostic_When_RepositoryHasInterface()
+	{
+		const string testCode = @"
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace MyApp.Infrastructure.Data
+{
+	public interface IOrderRepository
+	{
+		List<Order> GetAll();
+	}
+
+	public class OrderRepository : IOrderRepository // Implements interface
+	{
+		private readonly DbContext _context;
+
+		public OrderRepository(DbContext context)
+		{
+			_context = context;
+		}
+
+		public List<Order> GetAll()
+		{
+			return _context.Set<Order>().ToList();
+		}
+	}
+}";
+
+		var diagnostics = RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
+
+		return diagnostics.Length == 0;
 	}
 }

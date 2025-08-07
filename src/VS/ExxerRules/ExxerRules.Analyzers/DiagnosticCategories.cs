@@ -49,4 +49,8 @@ public static class DiagnosticCategories
 	/// Category for logging related diagnostics.
 	/// </summary>
 	public const string Logging = "ExxerRules.Logging";
+	/// <summary>
+	/// Category for functional programming pattern diagnostics.
+	/// </summary>
+	public const string FunctionalPatterns = "ExxerRules.FunctionalPatterns";
 }

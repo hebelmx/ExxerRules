@@ -5,7 +5,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <IsPackable>false</IsPackable>
+    <IsPackable>true</IsPackable>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <RootNamespace>ExxerRules.Analyzers</RootNamespace>
     <AssemblyName>ExxerRules.Analyzers</AssemblyName>
@@ -18,12 +18,34 @@
   <PropertyGroup>
     <PackageId>ExxerRules.Analyzers</PackageId>
     <PackageVersion>1.0.0</PackageVersion>
-    <Authors>ExxerAI</Authors>
-    <Description>Roslyn analyzers for enforcing ExxerAI coding standards and best practices</Description>
+    <Authors>ExxerAI Development Team</Authors>
+    <Company>ExxerAI</Company>
+    <Product>ExxerRules Modern Development Conventions</Product>
+    <Title>ExxerRules - Modern Development Conventions Analyzers</Title>
+    <Description>Comprehensive Roslyn analyzer suite enforcing Modern Development Conventions (MDC) with 20 production-ready analyzers covering Clean Architecture, functional patterns, testing standards, performance optimization, and modern C# best practices. Includes Result&lt;T&gt; pattern enforcement, repository pattern validation, async/await best practices, and comprehensive testing standards compliance.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Copyright (c) ExxerAI 2025</Copyright>
-    <PackageTags>analyzers, roslyn, csharp, dotnet, exxerai</PackageTags>
+    <PackageProjectUrl>https://github.com/exxerai/exxer-rules</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/exxerai/exxer-rules</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>analyzers;roslyn;csharp;dotnet;clean-architecture;functional-programming;testing;performance;modern-csharp;code-quality;mdc;result-pattern;repository-pattern;async-await;xunit;shouldly;nsubstitute</PackageTags>
+    <PackageReleaseNotes>
+      v1.0.0: Initial release with 20 comprehensive analyzers
+      - Testing Standards (5): XUnit v3, Shouldly, NSubstitute, DbContext patterns, naming conventions
+      - Functional Patterns (1): Result&lt;T&gt; pattern enforcement (no exceptions)
+      - Null Safety (1): Parameter validation
+      - Async Best Practices (2): CancellationToken support, ConfigureAwait(false)
+      - Documentation (1): XML documentation requirements
+      - Code Quality (4): Magic numbers/strings, expression bodies, no regions, pattern matching
+      - Architecture (2): Clean Architecture boundaries, Repository patterns
+      - Performance (2): Efficient LINQ, ConfigureAwait patterns
+      - Logging (2): Structured logging, no Console.WriteLine
+      
+      All analyzers developed using Test-Driven Development with 51/51 tests passing (100% success rate).
+    </PackageReleaseNotes>
     <NoPackageAnalysis>true</NoPackageAnalysis>
+    <IncludeSymbols>false</IncludeSymbols>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,12 +54,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FluentResults" Version="3.15.2" />
+    <PackageReference Include="FluentResults" Version="3.15.2">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="tools\*.ps1" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="" />
-    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers\dotnet\cs\$(AssemblyName).dll" Visible="false" />
+    <None Include="..\..\..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

@@ -451,7 +451,6 @@
       },
       "ExxerRules.Analyzers/1.0.0": {
         "dependencies": {
-          "FluentResults": "3.15.2",
           "Microsoft.CodeAnalysis.CSharp": "4.8.0"
         },
         "runtime": {
