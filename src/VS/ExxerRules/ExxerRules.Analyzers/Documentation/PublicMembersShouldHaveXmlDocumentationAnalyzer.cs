@@ -116,8 +116,8 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
 		SyntaxToken identifier, 
 		string memberType)
 	{
-		// Only analyze public members
-		if (!IsPublicMember(modifiers))
+		// Only analyze public members or interface members
+		if (!IsPublicMember(modifiers) && !IsInterfaceMember(node))
 			return;
 
 		// Check if member has XML documentation
@@ -137,6 +137,19 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
 		// Member is public if it explicitly has public modifier
 		// OR if it's in an interface (interface members are implicitly public)
 		return modifiers.Any(SyntaxKind.PublicKeyword);
+	}
+
+	private static bool IsInterfaceMember(SyntaxNode node)
+	{
+		// Check if the member is inside an interface
+		var parent = node.Parent;
+		while (parent != null)
+		{
+			if (parent is InterfaceDeclarationSyntax)
+				return true;
+			parent = parent.Parent;
+		}
+		return false;
 	}
 
 	private static bool HasXmlDocumentation(SyntaxNode node)

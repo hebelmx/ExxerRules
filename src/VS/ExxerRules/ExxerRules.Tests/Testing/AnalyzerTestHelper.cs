@@ -19,6 +19,18 @@ public static class AnalyzerTestHelper
 	/// <returns>The diagnostics reported by the analyzer.</returns>
 	public static ImmutableArray<Diagnostic> RunAnalyzer(string sourceCode, DiagnosticAnalyzer analyzer)
 	{
+		return RunAnalyzer(sourceCode, analyzer, includeHidden: false);
+	}
+
+	/// <summary>
+	/// Runs a diagnostic analyzer on the given source code and returns the diagnostics.
+	/// </summary>
+	/// <param name="sourceCode">The source code to analyze.</param>
+	/// <param name="analyzer">The analyzer to run.</param>
+	/// <param name="includeHidden">Whether to include hidden diagnostics in the results.</param>
+	/// <returns>The diagnostics reported by the analyzer.</returns>
+	public static ImmutableArray<Diagnostic> RunAnalyzer(string sourceCode, DiagnosticAnalyzer analyzer, bool includeHidden)
+	{
 		var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
 		var references = GetMetadataReferences();
 		
@@ -32,7 +44,9 @@ public static class AnalyzerTestHelper
 			ImmutableArray.Create(analyzer));
 
 		var diagnostics = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
-		return diagnostics.Where(d => d.Severity != DiagnosticSeverity.Hidden).ToImmutableArray();
+		return includeHidden 
+			? diagnostics.ToImmutableArray()
+			: diagnostics.Where(d => d.Severity != DiagnosticSeverity.Hidden).ToImmutableArray();
 	}
 
 	/// <summary>

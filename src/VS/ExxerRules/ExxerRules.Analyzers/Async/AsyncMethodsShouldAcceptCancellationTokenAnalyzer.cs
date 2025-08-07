@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using ExxerRules.Analyzers.Common;
 using FluentResults;
+using System.Collections.Generic;
 
 namespace ExxerRules.Analyzers.Async;
 
@@ -125,8 +126,47 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
 	private static bool IsCancellationTokenType(ITypeSymbol typeSymbol)
 	{
 		// Check if type is System.Threading.CancellationToken
-		return typeSymbol.ContainingNamespace?.Name == "Threading" &&
-			   typeSymbol.ContainingNamespace.ContainingNamespace?.Name == "System" &&
-			   typeSymbol.Name == "CancellationToken";
+		if (typeSymbol.ContainingNamespace?.Name == "Threading" &&
+			typeSymbol.ContainingNamespace.ContainingNamespace?.Name == "System" &&
+			typeSymbol.Name == "CancellationToken")
+		{
+			return true;
+		}
+
+		// Check for fully qualified name
+		var fullName = GetFullTypeName(typeSymbol);
+		return fullName == "System.Threading.CancellationToken" || 
+			   fullName == "CancellationToken";
+	}
+
+	private static string GetFullTypeName(ITypeSymbol typeSymbol)
+	{
+		if (typeSymbol == null)
+			return string.Empty;
+
+		var parts = new List<string>();
+		var current = typeSymbol;
+
+		while (current != null)
+		{
+			parts.Insert(0, current.Name);
+			current = current.ContainingType;
+		}
+
+		// Add namespace
+		var namespaceParts = new List<string>();
+		var namespaceSymbol = typeSymbol.ContainingNamespace;
+		while (namespaceSymbol != null && !namespaceSymbol.IsGlobalNamespace)
+		{
+			namespaceParts.Insert(0, namespaceSymbol.Name);
+			namespaceSymbol = namespaceSymbol.ContainingNamespace;
+		}
+
+		if (namespaceParts.Any())
+		{
+			return string.Join(".", namespaceParts.Concat(parts));
+		}
+
+		return string.Join(".", parts);
 	}
 }

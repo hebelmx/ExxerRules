@@ -1,0 +1,36 @@
+{
+  "stryker-config": {
+    "project": "ExxerRules.Analyzers",
+    "project-info": {
+      "name": "ExxerRules.Analyzers",
+      "module": "ExxerRules.Analyzers"
+    },
+    "mutate": [
+      "**/*.cs"
+    ],
+    "ignore-mutations": [
+      "string"
+    ],
+    "ignore-methods": [
+      "ToString",
+      "GetHashCode",
+      "Equals"
+    ],
+    "test-projects": [
+      "ExxerRules.Tests"
+    ],
+    "mutation-level": "Advanced",
+    "concurrency": 4,
+    "thresholds": {
+      "high": 80,
+      "low": 60,
+      "break": 0
+    },
+    "reporters": [
+      "html",
+      "progress",
+      "json"
+    ],
+    "verbosity": "info"
+  }
+}

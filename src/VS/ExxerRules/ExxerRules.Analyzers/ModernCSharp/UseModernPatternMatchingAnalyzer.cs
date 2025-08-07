@@ -57,6 +57,30 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
 				context.ReportDiagnostic(diagnostic);
 			}
 		}
+		// Also check for else-if chains with the same pattern
+		else if (ifStatement.Else?.Statement is IfStatementSyntax elseIfStatement)
+		{
+			// Recursively analyze the else-if statement
+			AnalyzeIfStatementForPattern(elseIfStatement, context.ReportDiagnostic);
+		}
+	}
+
+	private static void AnalyzeIfStatementForPattern(IfStatementSyntax ifStatement, Action<Diagnostic> reportDiagnostic)
+	{
+		// Check if condition is a simple 'is' expression without declaration pattern
+		if (ifStatement.Condition is BinaryExpressionSyntax binaryExpression &&
+			binaryExpression.IsKind(SyntaxKind.IsExpression) &&
+			binaryExpression.Right is TypeSyntax)
+		{
+			// Check if the if block contains a cast of the same variable
+			if (ContainsCastOfSameVariable(ifStatement.Statement, binaryExpression))
+			{
+				var diagnostic = Diagnostic.Create(
+					Rule,
+					binaryExpression.GetLocation());
+				reportDiagnostic(diagnostic);
+			}
+		}
 	}
 
 	private static bool ContainsCastOfSameVariable(StatementSyntax statement, BinaryExpressionSyntax isExpression)
@@ -92,6 +116,18 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
 			{
 				if (ExpressionContainsCast(expressionStatement.Expression, variableName, targetType))
 					return true;
+			}
+			else if (statement is LocalDeclarationStatementSyntax localDeclaration)
+			{
+				// Check for patterns like "var u = (User)user"
+				foreach (var variable in localDeclaration.Declaration.Variables)
+				{
+					if (variable.Initializer?.Value != null)
+					{
+						if (ExpressionContainsCast(variable.Initializer.Value, variableName, targetType))
+							return true;
+					}
+				}
 			}
 		}
 

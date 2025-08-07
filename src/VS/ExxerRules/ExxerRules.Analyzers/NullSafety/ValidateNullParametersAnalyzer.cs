@@ -95,9 +95,13 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 			var parameterType = semanticModel.GetTypeInfo(parameter.Type!).Type;
 			
 			// Check if it's a reference type (not value type and not nullable value type)
+			// Also check for string, object, and other common reference types
 			if (parameterType != null && 
-				parameterType.IsReferenceType && 
-				!parameterType.IsValueType)
+				(parameterType.IsReferenceType || 
+				 parameterType.ToString() == "string" ||
+				 parameterType.ToString() == "object" ||
+				 parameterType.ToString().Contains("String") ||
+				 parameterType.ToString().Contains("Object")))
 			{
 				referenceParams.Add(parameter.Identifier.ValueText);
 			}
@@ -115,8 +119,8 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 		if (!statements.Any())
 			return unvalidated;
 
-		// Look for null validation patterns in the first few statements
-		var firstStatements = statements.Take(referenceParameters.Count + 2); // Allow some flexibility
+		// Look for null validation patterns in all statements
+		var firstStatements = statements;
 
 		foreach (var statement in firstStatements)
 		{
@@ -162,11 +166,19 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 				// Check if one side is a parameter and the other is null
 				if (IsNullLiteral(binaryExpr.Right) && referenceParameters.Contains(leftIdentifier))
 				{
-					return leftIdentifier;
+					// Check if the if statement body contains appropriate validation
+					if (HasAppropriateValidation(ifStatement))
+					{
+						return leftIdentifier;
+					}
 				}
 				if (IsNullLiteral(binaryExpr.Left) && referenceParameters.Contains(rightIdentifier))
 				{
-					return rightIdentifier;
+					// Check if the if statement body contains appropriate validation
+					if (HasAppropriateValidation(ifStatement))
+					{
+						return rightIdentifier;
+					}
 				}
 			}
 
@@ -176,7 +188,11 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 				var identifier = GetIdentifierFromExpression(isPattern.Expression);
 				if (referenceParameters.Contains(identifier) && IsNullPattern(isPattern.Pattern))
 				{
-					return identifier;
+					// Check if the if statement body contains appropriate validation
+					if (HasAppropriateValidation(ifStatement))
+					{
+						return identifier;
+					}
 				}
 			}
 		}
@@ -200,6 +216,64 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 		}
 
 		return null;
+	}
+
+	private static bool HasAppropriateValidation(IfStatementSyntax ifStatement)
+	{
+		// Check if the if statement body contains appropriate validation patterns
+		// Look for: throw new ArgumentNullException(nameof(parameter))
+		// or: return Result.Fail(...)
+		// or: ArgumentNullException.ThrowIfNull(parameter)
+		
+		if (ifStatement.Statement is BlockSyntax block)
+		{
+			foreach (var statement in block.Statements)
+			{
+				if (IsValidValidationStatement(statement))
+					return true;
+			}
+		}
+		else if (IsValidValidationStatement(ifStatement.Statement))
+		{
+			return true;
+		}
+		
+		return false;
+	}
+
+	private static bool IsValidValidationStatement(StatementSyntax statement)
+	{
+		// Check for throw new ArgumentNullException(nameof(parameter))
+		if (statement is ThrowStatementSyntax throwStatement &&
+			throwStatement.Expression is ObjectCreationExpressionSyntax objectCreation &&
+			objectCreation.Type.ToString().Contains("ArgumentNullException"))
+		{
+			return true;
+		}
+		
+		// Check for return Result.Fail(...)
+		if (statement is ReturnStatementSyntax returnStatement &&
+			returnStatement.Expression is InvocationExpressionSyntax invocation &&
+			invocation.Expression.ToString().Contains("Result.Fail"))
+		{
+			return true;
+		}
+		
+		// Check for ArgumentNullException.ThrowIfNull(parameter)
+		if (statement is ExpressionStatementSyntax exprStatement &&
+			exprStatement.Expression is InvocationExpressionSyntax invocationExpr &&
+			invocationExpr.Expression.ToString().Contains("ArgumentNullException.ThrowIfNull"))
+		{
+			return true;
+		}
+		
+		// Check for any throw statement (more permissive)
+		if (statement is ThrowStatementSyntax)
+		{
+			return true;
+		}
+		
+		return false;
 	}
 
 	private static string GetIdentifierFromExpression(ExpressionSyntax expression)

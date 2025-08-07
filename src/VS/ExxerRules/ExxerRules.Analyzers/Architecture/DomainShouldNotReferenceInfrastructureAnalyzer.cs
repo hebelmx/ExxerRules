@@ -95,10 +95,36 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
 	private static bool IsInfrastructureNamespace(string namespaceName)
 	{
 		// Check if namespace contains "Infrastructure" (case-sensitive)
-		return namespaceName.Contains(".Infrastructure.") || 
-			   namespaceName.StartsWith("Infrastructure.") || 
-			   namespaceName.EndsWith(".Infrastructure") ||
-			   namespaceName == "Infrastructure";
+		if (namespaceName.Contains(".Infrastructure.") || 
+			namespaceName.StartsWith("Infrastructure.") || 
+			namespaceName.EndsWith(".Infrastructure") ||
+			namespaceName == "Infrastructure")
+		{
+			return true;
+		}
+
+		// Check for Entity Framework Core (infrastructure concern)
+		if (namespaceName.Contains("Microsoft.EntityFrameworkCore") ||
+			namespaceName.StartsWith("Microsoft.EntityFrameworkCore") ||
+			namespaceName.Contains("EntityFrameworkCore"))
+		{
+			return true;
+		}
+
+		// Check for other common infrastructure namespaces
+		var infrastructureNamespaces = new[]
+		{
+			"Microsoft.EntityFrameworkCore",
+			"System.Data.SqlClient",
+			"System.Data.Odbc",
+			"System.Data.OleDb",
+			"Npgsql",
+			"MySql.Data",
+			"Oracle.ManagedDataAccess",
+			"Microsoft.Data.SqlClient"
+		};
+
+		return infrastructureNamespaces.Any(ns => namespaceName.Contains(ns));
 	}
 
 	private static string? GetContainingClassName(SyntaxNode node)

@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Generic;
 
 namespace ExxerRules.Analyzers.Performance;
 
@@ -86,6 +87,160 @@ public class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
 			{
 				AnalyzeExpressionForLinqInefficiencies(context, returnStatement.Expression);
 			}
+			else if (statement is ExpressionStatementSyntax expressionStatement)
+			{
+				AnalyzeExpressionForLinqInefficiencies(context, expressionStatement.Expression);
+			}
+			else if (statement is LocalDeclarationStatementSyntax localDeclaration)
+			{
+				// Check for patterns like: var activeUsers = users.Where(u => u.IsActive);
+				foreach (var variable in localDeclaration.Declaration.Variables)
+				{
+					if (variable.Initializer?.Value != null)
+					{
+						AnalyzeExpressionForLinqInefficiencies(context, variable.Initializer.Value);
+					}
+				}
+			}
+		}
+
+		// Check for multiple LINQ operations on the same collection
+		CheckForMultipleLinqOperations(context, block);
+	}
+
+	private static void CheckForMultipleLinqOperations(SyntaxNodeAnalysisContext context, BlockSyntax block)
+	{
+		// Look for patterns like: var activeUsers = users.Where(u => u.IsActive); var count = activeUsers.Count();
+		var variableDeclarations = new List<(string VariableName, string Collection, Location Location)>();
+		
+		// Collect variable declarations that might be LINQ queries
+		foreach (var statement in block.Statements)
+		{
+			if (statement is LocalDeclarationStatementSyntax localDeclaration)
+			{
+				foreach (var variable in localDeclaration.Declaration.Variables)
+				{
+					if (variable.Initializer?.Value != null)
+					{
+						var collection = ExtractCollectionFromExpression(variable.Initializer.Value);
+						if (!string.IsNullOrEmpty(collection))
+						{
+							variableDeclarations.Add((variable.Identifier.ValueText, collection!, variable.GetLocation()));
+						}
+					}
+				}
+			}
+		}
+
+		// Check for usage of these variables in subsequent operations
+		foreach (var declaration in variableDeclarations)
+		{
+			var variableName = declaration.VariableName;
+			var collection = declaration.Collection;
+			
+			// Look for subsequent operations on this variable
+			var operations = new List<string>();
+			foreach (var statement in block.Statements)
+			{
+				CollectOperationsOnVariable(statement, variableName, operations);
+			}
+			
+			// If we have multiple operations on the same variable, it might be inefficient
+			if (operations.Count > 1)
+			{
+				var diagnostic = Diagnostic.Create(
+					Rule,
+					declaration.Location,
+					$"Multiple operations on LINQ query '{variableName}'");
+				context.ReportDiagnostic(diagnostic);
+			}
+		}
+	}
+
+	private static string? ExtractCollectionFromExpression(ExpressionSyntax expression)
+	{
+		if (expression is InvocationExpressionSyntax invocation &&
+			invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+		{
+			var methodName = memberAccess.Name.Identifier.ValueText;
+			if (IsLinqMethod(methodName))
+			{
+				return memberAccess.Expression.ToString();
+			}
+		}
+		return null;
+	}
+
+	private static void CollectOperationsOnVariable(StatementSyntax statement, string variableName, List<string> operations)
+	{
+		if (statement is ExpressionStatementSyntax expressionStatement)
+		{
+			if (expressionStatement.Expression is InvocationExpressionSyntax invocation &&
+				invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+			{
+				if (memberAccess.Expression.ToString() == variableName)
+				{
+					operations.Add(memberAccess.Name.Identifier.ValueText);
+				}
+			}
+		}
+		else if (statement is LocalDeclarationStatementSyntax localDeclaration)
+		{
+			foreach (var variable in localDeclaration.Declaration.Variables)
+			{
+				if (variable.Initializer?.Value is InvocationExpressionSyntax invocation &&
+					invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+				{
+					if (memberAccess.Expression.ToString() == variableName)
+					{
+						operations.Add(memberAccess.Name.Identifier.ValueText);
+					}
+				}
+			}
+		}
+	}
+
+	private static bool HasMultipleEnumerationsOfSameQuery(List<(string Collection, string Method, Location Location)> operations)
+	{
+		// This is a simplified check - in a real implementation, you'd need to analyze the query structure
+		// For now, we'll flag if we have multiple operations that could cause multiple enumerations
+		var enumerationMethods = new[] { "Count", "Any", "First", "FirstOrDefault", "Last", "LastOrDefault" };
+		
+		var hasEnumerationMethods = operations.Any(op => enumerationMethods.Contains(op.Method));
+		var hasMultipleOperations = operations.Count > 1;
+		
+		return hasEnumerationMethods && hasMultipleOperations;
+	}
+
+	private static void CollectLinqOperations(StatementSyntax statement, List<(string, string, Location)> operations)
+	{
+		if (statement is ExpressionStatementSyntax expressionStatement)
+		{
+			CollectLinqOperationsFromExpression(expressionStatement.Expression, operations);
+		}
+		else if (statement is LocalDeclarationStatementSyntax localDeclaration)
+		{
+			foreach (var variable in localDeclaration.Declaration.Variables)
+			{
+				if (variable.Initializer?.Value != null)
+				{
+					CollectLinqOperationsFromExpression(variable.Initializer.Value, operations);
+				}
+			}
+		}
+	}
+
+	private static void CollectLinqOperationsFromExpression(ExpressionSyntax expression, List<(string, string, Location)> operations)
+	{
+		if (expression is InvocationExpressionSyntax invocation &&
+			invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+		{
+			var methodName = memberAccess.Name.Identifier.ValueText;
+			if (IsLinqMethod(methodName))
+			{
+				var collection = memberAccess.Expression.ToString();
+				operations.Add((collection, methodName, expression.GetLocation()));
+			}
 		}
 	}
 
@@ -142,5 +297,16 @@ public class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
 		};
 
 		return linqMethods.Contains(methodName);
+	}
+
+	private static bool IsMaterializedOperation(string methodName)
+	{
+		// Operations that materialize the collection
+		var materializedMethods = new[]
+		{
+			"ToList", "ToArray", "ToDictionary", "ToLookup", "ToHashSet"
+		};
+
+		return materializedMethods.Contains(methodName);
 	}
 }
