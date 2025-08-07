@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="ExxeRulesTestAndAllRules" ToolsVersion="14.0">
+  <Include Path="ExxeRulesandall.ruleset" Action="Default" />
+  <Include Path="ExxeRules.test.ruleset" Action="Default" />
+</RuleSet>
