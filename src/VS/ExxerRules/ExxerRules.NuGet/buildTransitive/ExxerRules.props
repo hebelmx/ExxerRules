@@ -1,0 +1,6 @@
+<Project>
+  
+  <!-- Import the main props file for transitive dependencies -->
+  <Import Project="../build/ExxerRules.props" />
+  
+</Project>

@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>ExxerRules</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Title>ExxerRules - Modern Development Conventions</Title>
+    <Description>Comprehensive Roslyn analyzer suite with 20 production-ready analyzers enforcing Modern Development Conventions (MDC). Includes Result pattern enforcement, Clean Architecture validation, modern testing standards, async best practices, and performance optimization.</Description>
+    <Authors>ExxerAI</Authors>
+    <Company>ExxerAI</Company>
+    <PackageTags>csharp;roslyn;analyzer;code-quality;clean-architecture;result-pattern;testing;performance;async;modern-csharp;tdd;free;open-source</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/exxerai/exxer-rules</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/exxerai/exxer-rules</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright ExxerAI 2025</Copyright>    <!-- Analyzer Package Configuration -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <DevelopmentDependency>true</DevelopmentDependency>    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);NU5017</NoWarn> <!-- Suppress false positive "no dependencies nor content" warning -->
+    <PackageValidationBaselineVersion></PackageValidationBaselineVersion> <!-- Disable package validation -->
+    <EnablePackageValidation>false</EnablePackageValidation> <!-- Disable validation that causes false positive -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ExxerRules.Analyzers\ExxerRules.Analyzers.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\ExxerRules.CodeFixes\ExxerRules.CodeFixes.csproj" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Add a minimal dependency to satisfy NuGet validation -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="icon.png" Pack="true" PackagePath="" />
+    <None Include="content.txt" Pack="true" PackagePath="content" />
+    <None Include="tools\install.ps1" Pack="true" PackagePath="tools" />
+    <None Include="tools\uninstall.ps1" Pack="true" PackagePath="tools" />
+  </ItemGroup>
+  <!-- Analyzer DLLs - using None with proper PackagePath for analyzers -->
+  <ItemGroup>
+    <None Include="..\ExxerRules.Analyzers\bin\Release\netstandard2.0\ExxerRules.Analyzers.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
+    <None Include="..\ExxerRules.CodeFixes\bin\Release\netstandard2.0\ExxerRules.CodeFixes.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
+    <None Include="..\ExxerRules.Analyzers\bin\Release\netstandard2.0\FluentResults.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="build\ExxerRules.props" Pack="true" PackagePath="build\" />
+    <None Include="build\ExxerRules.targets" Pack="true" PackagePath="build\" />
+    <None Include="buildTransitive\ExxerRules.props" Pack="true" PackagePath="buildTransitive\" />
+    <None Include="buildTransitive\ExxerRules.targets" Pack="true" PackagePath="buildTransitive\" />
+  </ItemGroup>
+
+</Project>

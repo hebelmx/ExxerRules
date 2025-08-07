@@ -1,0 +1,5 @@
+# ExxerRules Content File
+
+This file ensures the NuGet package has content and isn't considered empty.
+
+The actual analyzers are located in the `analyzers/dotnet/cs/` folder within this package.

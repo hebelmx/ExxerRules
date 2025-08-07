@@ -13,6 +13,7 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <DevelopmentDependency>true</DevelopmentDependency>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -54,14 +55,19 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FluentResults" Version="3.15.2">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="FluentResults" Version="3.15.2" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers\dotnet\cs\$(AssemblyName).dll" Visible="false" />
     <None Include="..\..\..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
+
+  <Target Name="CopyDependencies" AfterTargets="Build">
+    <ItemGroup>
+      <AnalyzerDependencies Include="$(OutDir)\FluentResults.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(AnalyzerDependencies)" DestinationFolder="$(OutDir)" />
+  </Target>
 
 </Project>
