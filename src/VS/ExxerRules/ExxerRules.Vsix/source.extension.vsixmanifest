@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-	<Metadata>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">	<Metadata>
 		<Identity Id="ExxerRules.Analyzers.52e433b3-3478-4c2b-934c-96fdebedb77e" Version="1.0.0" Language="en-US" Publisher="ExxerAI" />
 		<DisplayName>ExxerRules - Modern Development Conventions</DisplayName>
 		<Description xml:space="preserve">Comprehensive Roslyn analyzer suite with 20 production-ready analyzers enforcing Modern Development Conventions (MDC). Includes Result&lt;T&gt; pattern enforcement, Clean Architecture validation, modern testing standards (XUnit v3, Shouldly, NSubstitute), async best practices, and performance optimization. Built with TDD - 51/51 tests passing.</Description>
@@ -8,26 +7,20 @@
 		<License>LICENSE.txt</License>
 		<GettingStartedGuide>https://github.com/exxerai/exxer-rules#quick-start</GettingStartedGuide>
 		<ReleaseNotes>https://github.com/exxerai/exxer-rules/releases</ReleaseNotes>
-		<Tags>analyzers, roslyn, csharp, dotnet, result-pattern, clean-architecture, testing, performance, functional-programming, tdd</Tags>
-	</Metadata>
-	<Installation>
+		<Icon>icon.png</Icon>
+		<PreviewImage>preview.png</PreviewImage>
+		<Tags>analyzers, roslyn, csharp, dotnet, result-pattern, clean-architecture, testing, performance, functional-programming, tdd, free, open-source</Tags>
+		<Pricing>free</Pricing>
+		<Category>Code Quality</Category>
+	</Metadata><Installation>
 		<InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">
 			<ProductArchitecture>amd64</ProductArchitecture>
-		</InstallationTarget>
-		<InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">
-			<ProductArchitecture>arm64</ProductArchitecture>
 		</InstallationTarget>
 		<InstallationTarget Id="Microsoft.VisualStudio.Professional" Version="[17.0,18.0)">
 			<ProductArchitecture>amd64</ProductArchitecture>
 		</InstallationTarget>
-		<InstallationTarget Id="Microsoft.VisualStudio.Professional" Version="[17.0,18.0)">
-			<ProductArchitecture>arm64</ProductArchitecture>
-		</InstallationTarget>
 		<InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,18.0)">
 			<ProductArchitecture>amd64</ProductArchitecture>
-		</InstallationTarget>
-		<InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,18.0)">
-			<ProductArchitecture>arm64</ProductArchitecture>
 		</InstallationTarget>
 	</Installation>
 	<Dependencies>
