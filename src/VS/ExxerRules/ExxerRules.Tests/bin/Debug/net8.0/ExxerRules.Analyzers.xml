@@ -52,6 +52,31 @@
         <member name="M:ExxerRules.Analyzers.Async.UseConfigureAwaitFalseAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
             <inheritdoc/>
         </member>
+        <member name="T:ExxerRules.Analyzers.CodeFormatting.CodeFormattingAnalyzer">
+            <summary>
+            Analyzer that detects common formatting issues and suggests running dotnet format.
+            SRP: Responsible for detecting formatting inconsistencies and suggesting automated fixes.
+            </summary>
+        </member>
+        <member name="P:ExxerRules.Analyzers.CodeFormatting.CodeFormattingAnalyzer.SupportedDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:ExxerRules.Analyzers.CodeFormatting.CodeFormattingAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ExxerRules.Analyzers.CodeFormatting.ProjectFormattingAnalyzer">
+            <summary>
+            Analyzer that provides a mechanism to trigger project formatting on demand.
+            This analyzer will always report a hidden diagnostic that can be used to trigger formatting.
+            SRP: Responsible only for providing a trigger point for project-wide formatting actions.
+            </summary>
+        </member>
+        <member name="P:ExxerRules.Analyzers.CodeFormatting.ProjectFormattingAnalyzer.SupportedDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:ExxerRules.Analyzers.CodeFormatting.ProjectFormattingAnalyzer.Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)">
+            <inheritdoc/>
+        </member>
         <member name="T:ExxerRules.Analyzers.CodeQuality.AvoidMagicNumbersAndStringsAnalyzer">
             <summary>
             Analyzer that enforces use of named constants instead of magic numbers and strings.
@@ -448,6 +473,16 @@
         <member name="F:ExxerRules.Analyzers.DiagnosticIds.DoNotUseConsoleWriteLine">
             <summary>
             Do not use Console.WriteLine in production code.
+            </summary>
+        </member>
+        <member name="F:ExxerRules.Analyzers.DiagnosticIds.ProjectFormatting">
+            <summary>
+            Format project using dotnet format command.
+            </summary>
+        </member>
+        <member name="F:ExxerRules.Analyzers.DiagnosticIds.CodeFormattingIssue">
+            <summary>
+            Code formatting inconsistency detected.
             </summary>
         </member>
         <member name="T:ExxerRules.Analyzers.Documentation.PublicMembersShouldHaveXmlDocumentationAnalyzer">

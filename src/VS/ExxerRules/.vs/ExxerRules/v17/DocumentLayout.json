@@ -5,6 +5,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{C6E6B2C6-1C6D-4E6D-9E6D-6E6D6E6D6E6D}|ExxerRules.CodeFixes\\ExxerRules.CodeFixes.csproj|f:\\dynamic\\exxerrules\\exxerrules\\src\\vs\\exxerrules\\exxerrules.codefixes\\errorhandling\\useresultpatterncodefixprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C6E6B2C6-1C6D-4E6D-9E6D-6E6D6E6D6E6D}|ExxerRules.CodeFixes\\ExxerRules.CodeFixes.csproj|solutionrelative:exxerrules.codefixes\\errorhandling\\useresultpatterncodefixprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8F8C4E8-3E8F-4F8F-BF8F-8F8F8F8F8F8F}|ExxerRules.Vsix\\ExxerRules.Vsix.csproj|f:\\dynamic\\exxerrules\\exxerrules\\src\\vs\\exxerrules\\exxerrules.vsix\\source.extension.vsixmanifest||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{E8F8C4E8-3E8F-4F8F-BF8F-8F8F8F8F8F8F}|ExxerRules.Vsix\\ExxerRules.Vsix.csproj|solutionrelative:exxerrules.vsix\\source.extension.vsixmanifest||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 997,
-          "SelectedChildIndex": 26,
+          "SelectedChildIndex": 27,
           "Children": [
             {
               "$type": "Bookmark",
@@ -119,6 +123,19 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{5e385563-b223-56a3-bc93-275ed7d58a3a}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "source.extension.vsixmanifest",
+              "DocumentMoniker": "F:\\Dynamic\\ExxerRules\\ExxerRules\\src\\VS\\ExxerRules\\ExxerRules.Vsix\\source.extension.vsixmanifest",
+              "RelativeDocumentMoniker": "ExxerRules.Vsix\\source.extension.vsixmanifest",
+              "ToolTip": "F:\\Dynamic\\ExxerRules\\ExxerRules\\src\\VS\\ExxerRules\\ExxerRules.Vsix\\source.extension.vsixmanifest",
+              "RelativeToolTip": "ExxerRules.Vsix\\source.extension.vsixmanifest",
+              "ViewState": "AgIAACsAAAAAAAAAAIBTwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2025-08-07T12:24:34.538Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",

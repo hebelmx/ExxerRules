@@ -171,6 +171,27 @@
             </summary>
             <param name="category">The category to run.</param>
         </member>
+        <member name="T:ExxerRules.Tests.TestCases.CodeFormattingTests">
+            <summary>
+            Test cases for code formatting analyzers.
+            SRP: Contains only test cases related to code formatting validation.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.TestCases.CodeFormattingTests.Should_ReportHiddenDiagnostic_When_ProjectFormattingAnalyzer">
+            <summary>
+            Tests that project formatting analyzer provides hidden diagnostic for triggering format action.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.TestCases.CodeFormattingTests.Should_ReportDiagnostic_When_FormattingIssuesDetected">
+            <summary>
+            Tests that code formatting analyzer detects formatting issues.
+            </summary>
+        </member>
+        <member name="M:ExxerRules.Tests.TestCases.CodeFormattingTests.Should_NotReportDiagnostic_When_CodeIsWellFormatted">
+            <summary>
+            Tests that well-formatted code does not report formatting issues.
+            </summary>
+        </member>
         <member name="T:ExxerRules.Tests.TestCases.FunctionalPatternsTests">
             <summary>
             Test cases for functional patterns analyzers.
