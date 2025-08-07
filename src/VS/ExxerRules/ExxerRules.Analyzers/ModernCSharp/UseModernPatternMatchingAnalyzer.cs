@@ -110,12 +110,16 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
 				returnStatement.Expression != null)
 			{
 				if (ExpressionContainsCast(returnStatement.Expression, variableName, targetType))
+				{
 					return true;
+				}
 			}
 			else if (statement is ExpressionStatementSyntax expressionStatement)
 			{
 				if (ExpressionContainsCast(expressionStatement.Expression, variableName, targetType))
+				{
 					return true;
+				}
 			}
 			else if (statement is LocalDeclarationStatementSyntax localDeclaration)
 			{
@@ -125,7 +129,9 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
 					if (variable.Initializer?.Value != null)
 					{
 						if (ExpressionContainsCast(variable.Initializer.Value, variableName, targetType))
+						{
 							return true;
+						}
 					}
 				}
 			}
@@ -137,7 +143,9 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
 	private static bool ExpressionContainsCast(ExpressionSyntax? expression, string variableName, string targetType)
 	{
 		if (expression == null)
+		{
 			return false;
+		}
 
 		var expressionText = expression.ToString();
 
@@ -146,7 +154,9 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
 		var castPattern2 = $"({targetType}){variableName}";
 
 		if (expressionText.Contains(castPattern1) || expressionText.Contains(castPattern2))
+		{
 			return true;
+		}
 
 		// Look for cast expressions like ((string)value) or (string)value
 		if (expression is CastExpressionSyntax castExpression)

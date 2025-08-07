@@ -46,7 +46,9 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
 
 		// Check if the await expression already has ConfigureAwait
 		if (HasConfigureAwait(expression))
+		{
 			return;
+		}
 
 		// Report diagnostic for missing ConfigureAwait(false)
 		var diagnostic = Diagnostic.Create(
@@ -71,7 +73,9 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
 			   currentInvocation.Expression is MemberAccessExpressionSyntax currentMember)
 		{
 			if (currentMember.Name.Identifier.ValueText == "ConfigureAwait")
+			{
 				return true;
+			}
 
 			current = currentMember.Expression;
 		}

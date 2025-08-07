@@ -2,10 +2,10 @@ using System.Collections.Immutable;
 using System.Composition;
 using System.Diagnostics;
 using System.IO;
+using ExxerRules.Analyzers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using ExxerRules.Analyzers;
 
 namespace ExxerRules.CodeFixes.CodeFormatting;
 
@@ -27,11 +27,17 @@ public class ProjectFormattingCodeFixProvider : CodeFixProvider
 	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 	{
 		var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-		if (root == null) return;
+		if (root == null)
+		{
+			return;
+		}
 
 		// Find the diagnostic for project formatting
 		var diagnostic = context.Diagnostics.FirstOrDefault(d => d.Id == DiagnosticIds.ProjectFormatting);
-		if (diagnostic == null) return;
+		if (diagnostic == null)
+		{
+			return;
+		}
 
 		// Get project information
 		var project = context.Document.Project;
@@ -131,11 +137,11 @@ public class ProjectFormattingCodeFixProvider : CodeFixProvider
 					if (process != null)
 					{
 						await Task.Run(() => process.WaitForExit());
-						
+
 						// Log results to Output window (if available)
 						var output = await process.StandardOutput.ReadToEndAsync();
 						var error = await process.StandardError.ReadToEndAsync();
-						
+
 						System.Diagnostics.Debug.WriteLine($"dotnet format completed with exit code: {process.ExitCode}");
 						if (!string.IsNullOrEmpty(output))
 						{
@@ -202,7 +208,7 @@ public class ProjectFormattingCodeFixProvider : CodeFixProvider
 	private static string? FindSolutionDirectory()
 	{
 		var currentDirectory = Environment.CurrentDirectory;
-		
+
 		while (!string.IsNullOrEmpty(currentDirectory))
 		{
 			// Look for .sln files

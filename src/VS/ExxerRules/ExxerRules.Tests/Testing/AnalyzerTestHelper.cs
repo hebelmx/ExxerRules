@@ -17,10 +17,7 @@ public static class AnalyzerTestHelper
 	/// <param name="sourceCode">The source code to analyze.</param>
 	/// <param name="analyzer">The analyzer to run.</param>
 	/// <returns>The diagnostics reported by the analyzer.</returns>
-	public static ImmutableArray<Diagnostic> RunAnalyzer(string sourceCode, DiagnosticAnalyzer analyzer)
-	{
-		return RunAnalyzer(sourceCode, analyzer, includeHidden: false);
-	}
+	public static ImmutableArray<Diagnostic> RunAnalyzer(string sourceCode, DiagnosticAnalyzer analyzer) => RunAnalyzer(sourceCode, analyzer, includeHidden: false);
 
 	/// <summary>
 	/// Runs a diagnostic analyzer on the given source code and returns the diagnostics.
@@ -33,20 +30,20 @@ public static class AnalyzerTestHelper
 	{
 		var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
 		var references = GetMetadataReferences();
-		
+
 		var compilation = CSharpCompilation.Create(
 			"TestAssembly",
-			new[] { syntaxTree },
+			[syntaxTree],
 			references,
 			new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
 		var compilationWithAnalyzers = compilation.WithAnalyzers(
-			ImmutableArray.Create(analyzer));
+			[analyzer]);
 
 		var diagnostics = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
-		return includeHidden 
-			? diagnostics.ToImmutableArray()
-			: diagnostics.Where(d => d.Severity != DiagnosticSeverity.Hidden).ToImmutableArray();
+		return includeHidden
+			? [.. diagnostics]
+			: [.. diagnostics.Where(d => d.Severity != DiagnosticSeverity.Hidden)];
 	}
 
 	/// <summary>
@@ -89,6 +86,6 @@ public static class AnalyzerTestHelper
 			// If XUnit isn't available, continue without it
 		}
 
-		return references.ToArray();
+		return [.. references];
 	}
 }

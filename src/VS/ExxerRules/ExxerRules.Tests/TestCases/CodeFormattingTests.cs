@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
-using ExxerRules.Analyzers.CodeFormatting;
 using ExxerRules.Analyzers;
+using ExxerRules.Analyzers.CodeFormatting;
 using ExxerRules.Tests.Testing;
-using Xunit;
+using Microsoft.CodeAnalysis;
 using Shouldly;
+using Xunit;
 
 namespace ExxerRules.Tests.TestCases;
 
@@ -35,7 +35,7 @@ namespace TestProject
 }";
 
 		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ProjectFormattingAnalyzer(), includeHidden: true);
-		
+
 		diagnostics.Length.ShouldBe(1);
 		diagnostics[0].Id.ShouldBe(DiagnosticIds.ProjectFormatting);
 		diagnostics[0].Severity.ShouldBe(DiagnosticSeverity.Hidden);
@@ -63,7 +63,7 @@ namespace TestProject
 }";
 
 		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new CodeFormattingAnalyzer());
-		
+
 		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
 		diagnostics.Any(d => d.Id == DiagnosticIds.CodeFormattingIssue).ShouldBeTrue();
 	}
@@ -99,7 +99,7 @@ namespace TestProject
 }";
 
 		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new CodeFormattingAnalyzer());
-		
+
 		// Should have fewer formatting issues (well-formatted code)
 		var formattingIssues = diagnostics.Where(d => d.Id == DiagnosticIds.CodeFormattingIssue).ToArray();
 		formattingIssues.Length.ShouldBeLessThanOrEqualTo(5); // Allow more tolerance for detection differences

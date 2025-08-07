@@ -2,10 +2,10 @@ using System.Collections.Immutable;
 using System.Composition;
 using System.Diagnostics;
 using System.IO;
+using ExxerRules.Analyzers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using ExxerRules.Analyzers;
 
 namespace ExxerRules.CodeFixes.CodeFormatting;
 
@@ -27,11 +27,17 @@ public class CodeFormattingCodeFixProvider : CodeFixProvider
 	public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
 	{
 		var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-		if (root == null) return;
+		if (root == null)
+		{
+			return;
+		}
 
 		// Find the diagnostic for formatting issues
 		var diagnostic = context.Diagnostics.FirstOrDefault(d => d.Id == DiagnosticIds.CodeFormattingIssue);
-		if (diagnostic == null) return;
+		if (diagnostic == null)
+		{
+			return;
+		}
 
 		// Get project information
 		var project = context.Document.Project;
@@ -52,7 +58,10 @@ public class CodeFormattingCodeFixProvider : CodeFixProvider
 	/// <param name="documentName">The name of the document.</param>
 	private static void RegisterDocumentFormattingActions(CodeFixContext context, Diagnostic diagnostic, string? documentPath, string documentName)
 	{
-		if (string.IsNullOrEmpty(documentPath)) return;
+		if (string.IsNullOrEmpty(documentPath))
+		{
+			return;
+		}
 
 		// Format current file only
 		var formatFileAction = CodeAction.Create(
@@ -109,7 +118,7 @@ public class CodeFormattingCodeFixProvider : CodeFixProvider
 		try
 		{
 			// Determine the working directory
-			string workingDirectory = DetermineWorkingDirectory(document, target);
+			var workingDirectory = DetermineWorkingDirectory(document, target);
 
 			// Prepare the process
 			var processStartInfo = new ProcessStartInfo
@@ -137,9 +146,9 @@ public class CodeFormattingCodeFixProvider : CodeFixProvider
 						// Set timeout to prevent hanging
 						var timeoutTask = Task.Delay(TimeSpan.FromMinutes(2));
 						var processTask = Task.Run(() => process.WaitForExit());
-						
+
 						var completedTask = await Task.WhenAny(processTask, timeoutTask);
-						
+
 						if (completedTask == timeoutTask)
 						{
 							System.Diagnostics.Debug.WriteLine("dotnet format timed out after 2 minutes");
@@ -152,19 +161,19 @@ public class CodeFormattingCodeFixProvider : CodeFixProvider
 
 						var success = process.ExitCode == 0;
 						var statusIcon = success ? "✅" : "❌";
-						
+
 						System.Diagnostics.Debug.WriteLine($"{statusIcon} dotnet format completed with exit code: {process.ExitCode}");
-						
+
 						if (!string.IsNullOrEmpty(output))
 						{
 							System.Diagnostics.Debug.WriteLine($"📄 Output:\n{output}");
 						}
-						
+
 						if (!string.IsNullOrEmpty(error) && !success)
 						{
 							System.Diagnostics.Debug.WriteLine($"🔴 Error:\n{error}");
 						}
-						
+
 						if (success)
 						{
 							System.Diagnostics.Debug.WriteLine("🎉 Formatting completed successfully! Files should reload automatically in your IDE.");
@@ -250,7 +259,7 @@ public class CodeFormattingCodeFixProvider : CodeFixProvider
 
 		// Fallback: try to construct from project name and common locations
 		var possibleExtensions = new[] { ".csproj", ".vbproj", ".fsproj" };
-		
+
 		// Try in current directory
 		foreach (var ext in possibleExtensions)
 		{

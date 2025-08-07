@@ -46,7 +46,9 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
 
 		// Skip if already expression-bodied
 		if (method.ExpressionBody != null)
+		{
 			return;
+		}
 
 		// Check if method has a simple single-return body
 		if (method.Body != null && CanBeExpressionBodied(method.Body))
@@ -65,15 +67,17 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
 
 		// Skip if already expression-bodied
 		if (property.ExpressionBody != null)
+		{
 			return;
+		}
 
 		// Check getter accessors that can be expression-bodied
 		if (property.AccessorList != null)
 		{
 			foreach (var accessor in property.AccessorList.Accessors)
 			{
-				if (accessor.IsKind(SyntaxKind.GetAccessorDeclaration) && 
-					accessor.Body != null && 
+				if (accessor.IsKind(SyntaxKind.GetAccessorDeclaration) &&
+					accessor.Body != null &&
 					CanBeExpressionBodied(accessor.Body))
 				{
 					var diagnostic = Diagnostic.Create(
@@ -91,15 +95,21 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
 	{
 		// Check if body contains only a single return statement
 		if (body.Statements.Count != 1)
+		{
 			return false;
+		}
 
 		// Must be a return statement
 		if (body.Statements[0] is not ReturnStatementSyntax returnStatement)
+		{
 			return false;
+		}
 
 		// Must have an expression to return
 		if (returnStatement.Expression == null)
+		{
 			return false;
+		}
 
 		// Simple heuristic: expression should be reasonably simple
 		// Avoid very complex expressions that would hurt readability

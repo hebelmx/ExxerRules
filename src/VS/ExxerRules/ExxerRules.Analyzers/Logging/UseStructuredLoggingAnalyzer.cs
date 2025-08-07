@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
 using System.Linq;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
 
 namespace ExxerRules.Analyzers.Logging;
 
@@ -47,12 +47,16 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 
 		// Check if this is a logging method call
 		if (!IsLoggingMethodCall(invocation, context.SemanticModel))
+		{
 			return;
+		}
 
 		// Get the first argument (the message template)
 		var arguments = invocation.ArgumentList.Arguments;
 		if (arguments.Count == 0)
+		{
 			return;
+		}
 
 		var messageArgument = arguments[0].Expression;
 
@@ -82,15 +86,18 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 	private static bool IsLoggingMethodCall(InvocationExpressionSyntax invocation, SemanticModel semanticModel)
 	{
 		// Check if the method is called on ILogger<T> or ILogger
-		var memberAccess = invocation.Expression as MemberAccessExpressionSyntax;
-		if (memberAccess == null)
+		if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
+		{
 			return false;
+		}
 
 		var methodName = memberAccess.Name.Identifier.ValueText;
-		
+
 		// Check if it's a logging method
 		if (!IsLoggingMethodName(methodName))
+		{
 			return false;
+		}
 
 		// For now, just check if the method name matches logging patterns
 		// This is more permissive and should catch the test case
@@ -102,7 +109,7 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 		// Common logging method names
 		var loggingMethods = new[]
 		{
-			"LogTrace", "LogDebug", "LogInformation", "LogWarning", 
+			"LogTrace", "LogDebug", "LogInformation", "LogWarning",
 			"LogError", "LogCritical", "Log"
 		};
 
@@ -124,7 +131,9 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 	private static string GetFullNamespace(INamespaceSymbol? namespaceSymbol)
 	{
 		if (namespaceSymbol == null || namespaceSymbol.IsGlobalNamespace)
+		{
 			return string.Empty;
+		}
 
 		var parts = new List<string>();
 		var current = namespaceSymbol;
@@ -142,31 +151,32 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 	{
 		// Check if it's a + operator with string operands
 		if (!binaryExpression.OperatorToken.IsKind(SyntaxKind.PlusToken))
+		{
 			return false;
+		}
 
 		// Check if either operand is a string literal
-		var leftIsString = binaryExpression.Left is LiteralExpressionSyntax leftLiteral && 
+		var leftIsString = binaryExpression.Left is LiteralExpressionSyntax leftLiteral &&
 						  leftLiteral.Token.IsKind(SyntaxKind.StringLiteralToken);
-		var rightIsString = binaryExpression.Right is LiteralExpressionSyntax rightLiteral && 
+		var rightIsString = binaryExpression.Right is LiteralExpressionSyntax rightLiteral &&
 						   rightLiteral.Token.IsKind(SyntaxKind.StringLiteralToken);
 
 		// If either operand is a string literal, it's string concatenation
 		if (leftIsString || rightIsString)
+		{
 			return true;
+		}
 
 		// Recursively check for string concatenation patterns
 		return ContainsStringConcatenation(binaryExpression);
 	}
 
-	private static bool ContainsStringConcatenation(ExpressionSyntax expression)
+	private static bool ContainsStringConcatenation(ExpressionSyntax expression) => expression switch
 	{
-		return expression switch
-		{
-			BinaryExpressionSyntax binaryExpr when binaryExpr.OperatorToken.IsKind(SyntaxKind.PlusToken) => true,
-			LiteralExpressionSyntax literal when literal.Token.IsKind(SyntaxKind.StringLiteralToken) => false,
-			_ => false
-		};
-	}
+		BinaryExpressionSyntax binaryExpr when binaryExpr.OperatorToken.IsKind(SyntaxKind.PlusToken) => true,
+		LiteralExpressionSyntax literal when literal.Token.IsKind(SyntaxKind.StringLiteralToken) => false,
+		_ => false
+	};
 
 	private static bool ContainsStringConcatenationInDescendants(ExpressionSyntax expression)
 	{

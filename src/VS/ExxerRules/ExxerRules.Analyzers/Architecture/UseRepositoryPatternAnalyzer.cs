@@ -63,15 +63,17 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
 	private static void CheckRepositoryHasInterface(SyntaxNodeAnalysisContext context, ClassDeclarationSyntax classDeclaration)
 	{
 		var className = classDeclaration.Identifier.ValueText;
-		
+
 		// Check if class implements an interface
 		if (classDeclaration.BaseList?.Types.Count > 0)
 		{
 			var implementsInterface = classDeclaration.BaseList.Types
 				.Any(t => t.Type.ToString().StartsWith("I") && t.Type.ToString().Contains("Repository"));
-			
+
 			if (implementsInterface)
+			{
 				return; // Has interface, good!
+			}
 		}
 
 		// Repository class without interface
@@ -86,7 +88,7 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
 	private static void CheckForDirectDataAccessUsage(SyntaxNodeAnalysisContext context, ClassDeclarationSyntax classDeclaration)
 	{
 		var className = classDeclaration.Identifier.ValueText;
-		bool foundDirectAccess = false;
+		var foundDirectAccess = false;
 
 		// Look for DbContext fields/properties
 		foreach (var member in classDeclaration.Members)
@@ -148,18 +150,15 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
 		}
 	}
 
-	private static bool IsRepositoryClass(string className)
-	{
-		return className.Contains("Repository") || 
+	private static bool IsRepositoryClass(string className) => className.Contains("Repository") ||
 			   className.Contains("DataAccess") ||
 			   className.Contains("Dal");
-	}
 
 	private static bool IsInInfrastructureLayer(SyntaxNodeAnalysisContext context, ClassDeclarationSyntax classDeclaration)
 	{
 		// Find the containing namespace declaration
 		var namespaceDeclaration = classDeclaration.FirstAncestorOrSelf<BaseNamespaceDeclarationSyntax>();
-		
+
 		if (namespaceDeclaration == null)
 		{
 			// Look for namespace declarations in the file
@@ -167,15 +166,17 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
 			var allNamespaces = root.DescendantNodes().OfType<BaseNamespaceDeclarationSyntax>();
 			namespaceDeclaration = allNamespaces.FirstOrDefault();
 		}
-		
+
 		if (namespaceDeclaration == null)
+		{
 			return false;
+		}
 
 		var namespaceName = namespaceDeclaration.Name.ToString();
-		
+
 		// Check if namespace contains "Infrastructure" 
-		return namespaceName.Contains(".Infrastructure.") || 
-			   namespaceName.StartsWith("Infrastructure.") || 
+		return namespaceName.Contains(".Infrastructure.") ||
+			   namespaceName.StartsWith("Infrastructure.") ||
 			   namespaceName.EndsWith(".Infrastructure") ||
 			   namespaceName == "Infrastructure";
 	}
@@ -185,7 +186,7 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
 		var dataAccessTypes = new[]
 		{
 			"DbContext",
-			"IDbContext", 
+			"IDbContext",
 			"DataContext",
 			"ObjectContext",
 			"SqlConnection",

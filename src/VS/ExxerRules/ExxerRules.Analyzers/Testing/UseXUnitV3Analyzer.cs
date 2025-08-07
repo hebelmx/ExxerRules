@@ -88,7 +88,9 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
 		var namespaceName = usingDirective.Name?.ToString();
 
 		if (namespaceName == null)
+		{
 			return;
+		}
 
 		// TDD Fix: Detect XUnit v2 but allow XUnit v3
 		if (namespaceName == "Xunit")
@@ -126,25 +128,19 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
 		}
 	}
 
-	private static string GetFrameworkName(string attributeName)
+	private static string GetFrameworkName(string attributeName) => attributeName switch
 	{
-		return attributeName switch
-		{
-			"TestMethod" or "TestClass" or "TestInitialize" or "TestCleanup" or 
-			"ClassInitialize" or "ClassCleanup" or "AssemblyInitialize" or "AssemblyCleanup" => "MSTest",
-			"Test" or "TestCase" or "TestFixture" or "SetUp" or "TearDown" or 
-			"OneTimeSetUp" or "OneTimeTearDown" or "TestFixtureSetUp" or "TestFixtureTearDown" => "NUnit",
-			_ => "unknown testing framework"
-		};
-	}
+		"TestMethod" or "TestClass" or "TestInitialize" or "TestCleanup" or
+		"ClassInitialize" or "ClassCleanup" or "AssemblyInitialize" or "AssemblyCleanup" => "MSTest",
+		"Test" or "TestCase" or "TestFixture" or "SetUp" or "TearDown" or
+		"OneTimeSetUp" or "OneTimeTearDown" or "TestFixtureSetUp" or "TestFixtureTearDown" => "NUnit",
+		_ => "unknown testing framework"
+	};
 
-	private static string GetFrameworkNameFromNamespace(string namespaceName)
+	private static string GetFrameworkNameFromNamespace(string namespaceName) => namespaceName switch
 	{
-		return namespaceName switch
-		{
-			var ns when ns.StartsWith("Microsoft.VisualStudio.TestTools.UnitTesting") => "MSTest",
-			var ns when ns.StartsWith("NUnit") => "NUnit",
-			_ => "unknown testing framework"
-		};
-	}
+		var ns when ns.StartsWith("Microsoft.VisualStudio.TestTools.UnitTesting") => "MSTest",
+		var ns when ns.StartsWith("NUnit") => "NUnit",
+		_ => "unknown testing framework"
+	};
 }

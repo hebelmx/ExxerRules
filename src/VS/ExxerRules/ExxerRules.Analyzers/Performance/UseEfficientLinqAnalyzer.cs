@@ -1,10 +1,10 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System.Collections.Generic;
 
 namespace ExxerRules.Analyzers.Performance;
 
@@ -112,7 +112,7 @@ public class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
 	{
 		// Look for patterns like: var activeUsers = users.Where(u => u.IsActive); var count = activeUsers.Count();
 		var variableDeclarations = new List<(string VariableName, string Collection, Location Location)>();
-		
+
 		// Collect variable declarations that might be LINQ queries
 		foreach (var statement in block.Statements)
 		{
@@ -137,14 +137,14 @@ public class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
 		{
 			var variableName = declaration.VariableName;
 			var collection = declaration.Collection;
-			
+
 			// Look for subsequent operations on this variable
 			var operations = new List<string>();
 			foreach (var statement in block.Statements)
 			{
 				CollectOperationsOnVariable(statement, variableName, operations);
 			}
-			
+
 			// If we have multiple operations on the same variable, it might be inefficient
 			if (operations.Count > 1)
 			{
@@ -205,10 +205,10 @@ public class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
 		// This is a simplified check - in a real implementation, you'd need to analyze the query structure
 		// For now, we'll flag if we have multiple operations that could cause multiple enumerations
 		var enumerationMethods = new[] { "Count", "Any", "First", "FirstOrDefault", "Last", "LastOrDefault" };
-		
+
 		var hasEnumerationMethods = operations.Any(op => enumerationMethods.Contains(op.Method));
 		var hasMultipleOperations = operations.Count > 1;
-		
+
 		return hasEnumerationMethods && hasMultipleOperations;
 	}
 
@@ -291,8 +291,8 @@ public class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
 	{
 		var linqMethods = new[]
 		{
-			"Any", "First", "FirstOrDefault", "Last", "LastOrDefault", 
-			"Single", "SingleOrDefault", "Count", "Where", "Select", 
+			"Any", "First", "FirstOrDefault", "Last", "LastOrDefault",
+			"Single", "SingleOrDefault", "Count", "Where", "Select",
 			"OrderBy", "OrderByDescending", "Take", "Skip"
 		};
 

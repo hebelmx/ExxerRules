@@ -43,20 +43,24 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
 	private static void AnalyzeUsingDirective(SyntaxNodeAnalysisContext context)
 	{
 		var usingDirective = (UsingDirectiveSyntax)context.Node;
-		
+
 		// Check if we're in a Domain namespace
 		if (!IsInDomainNamespace(context.Node))
+		{
 			return;
+		}
 
 		var namespaceName = usingDirective.Name?.ToString();
 		if (namespaceName == null)
+		{
 			return;
+		}
 
 		// Check if the using directive references Infrastructure
 		if (IsInfrastructureNamespace(namespaceName))
 		{
 			var containingClass = GetContainingClassName(context.Node);
-			
+
 			var diagnostic = Diagnostic.Create(
 				Rule,
 				usingDirective.GetLocation(),
@@ -70,7 +74,7 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
 	{
 		// Find the containing namespace declaration
 		var namespaceDeclaration = node.FirstAncestorOrSelf<BaseNamespaceDeclarationSyntax>();
-		
+
 		// If no namespace declaration found, check the compilation unit for namespace
 		if (namespaceDeclaration == null)
 		{
@@ -79,15 +83,17 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
 			var allNamespaces = root.DescendantNodes().OfType<BaseNamespaceDeclarationSyntax>();
 			namespaceDeclaration = allNamespaces.FirstOrDefault();
 		}
-		
+
 		if (namespaceDeclaration == null)
+		{
 			return false;
+		}
 
 		var namespaceName = namespaceDeclaration.Name.ToString();
-		
+
 		// Check if namespace contains "Domain" (case-sensitive)
-		return namespaceName.Contains(".Domain.") || 
-			   namespaceName.StartsWith("Domain.") || 
+		return namespaceName.Contains(".Domain.") ||
+			   namespaceName.StartsWith("Domain.") ||
 			   namespaceName.EndsWith(".Domain") ||
 			   namespaceName == "Domain";
 	}
@@ -95,8 +101,8 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
 	private static bool IsInfrastructureNamespace(string namespaceName)
 	{
 		// Check if namespace contains "Infrastructure" (case-sensitive)
-		if (namespaceName.Contains(".Infrastructure.") || 
-			namespaceName.StartsWith("Infrastructure.") || 
+		if (namespaceName.Contains(".Infrastructure.") ||
+			namespaceName.StartsWith("Infrastructure.") ||
 			namespaceName.EndsWith(".Infrastructure") ||
 			namespaceName == "Infrastructure")
 		{

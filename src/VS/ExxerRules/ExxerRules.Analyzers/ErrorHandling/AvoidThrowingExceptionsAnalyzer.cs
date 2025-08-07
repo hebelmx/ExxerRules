@@ -44,7 +44,7 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		var throwStatement = (ThrowStatementSyntax)context.Node;
 
 		// Skip if in catch block and just rethrowing
-		if (throwStatement.Expression == null && throwStatement.Parent is BlockSyntax block && 
+		if (throwStatement.Expression == null && throwStatement.Parent is BlockSyntax block &&
 			block.Parent is CatchClauseSyntax)
 		{
 			return;
@@ -52,8 +52,8 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 
 		// Skip if in a method that's specifically for exception handling (e.g., ThrowHelper methods)
 		var containingMethod = throwStatement.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
-		if (containingMethod != null && 
-			(containingMethod.Identifier.Text.Contains("Throw") || 
+		if (containingMethod != null &&
+			(containingMethod.Identifier.Text.Contains("Throw") ||
 			 containingMethod.Identifier.Text.Contains("Exception")))
 		{
 			return;
@@ -74,8 +74,8 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 
 		// Skip if in a method that's specifically for exception handling
 		var containingMethod = throwExpression.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
-		if (containingMethod != null && 
-			(containingMethod.Identifier.Text.Contains("Throw") || 
+		if (containingMethod != null &&
+			(containingMethod.Identifier.Text.Contains("Throw") ||
 			 containingMethod.Identifier.Text.Contains("Exception")))
 		{
 			return;
@@ -93,7 +93,9 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 	private static string GetExceptionType(ExpressionSyntax? expression, SemanticModel semanticModel)
 	{
 		if (expression == null)
+		{
 			return "exception";
+		}
 
 		var typeInfo = semanticModel.GetTypeInfo(expression);
 		if (typeInfo.Type != null)

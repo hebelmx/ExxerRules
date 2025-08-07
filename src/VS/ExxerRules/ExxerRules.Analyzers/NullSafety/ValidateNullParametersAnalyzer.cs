@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
 using System.Linq;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
 
 namespace ExxerRules.Analyzers.NullSafety;
 
@@ -47,24 +47,28 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 
 		// Skip if this is a method that should be exempted
 		if (IsSkippableMethod(methodDeclaration))
+		{
 			return;
+		}
 
 		// Get reference type parameters that need validation
 		var referenceParameters = GetReferenceTypeParameters(methodDeclaration, context.SemanticModel);
 		if (!referenceParameters.Any())
+		{
 			return;
+		}
 
 		// Check if method has null validation for each reference parameter
 		var unvalidatedParameters = GetUnvalidatedReferenceParameters(methodDeclaration, referenceParameters);
-		
-		if (unvalidatedParameters.Any())
+
+		// Report one diagnostic per unvalidated parameter
+		foreach (var unvalidatedParameter in unvalidatedParameters)
 		{
-			var parameterNames = string.Join(", ", unvalidatedParameters);
 			var diagnostic = Diagnostic.Create(
 				Rule,
 				methodDeclaration.Identifier.GetLocation(),
 				methodDeclaration.Identifier.Text,
-				parameterNames);
+				unvalidatedParameter);
 			context.ReportDiagnostic(diagnostic);
 		}
 	}
@@ -73,15 +77,21 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 	{
 		// Skip constructors, destructors, and event handlers
 		if (method.Identifier.Text.StartsWith("On") && method.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+		{
 			return true;
+		}
 
 		// Skip Main method
 		if (method.Identifier.Text == "Main")
+		{
 			return true;
+		}
 
 		// Skip interface methods (they don't have bodies)
 		if (method.Body == null && method.ExpressionBody == null)
+		{
 			return true;
+		}
 
 		return false;
 	}
@@ -92,18 +102,40 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 
 		foreach (var parameter in method.ParameterList.Parameters)
 		{
-			var parameterType = semanticModel.GetTypeInfo(parameter.Type!).Type;
-			
-			// Check if it's a reference type (not value type and not nullable value type)
-			// Also check for string, object, and other common reference types
-			if (parameterType != null && 
-				(parameterType.IsReferenceType || 
-				 parameterType.ToString() == "string" ||
-				 parameterType.ToString() == "object" ||
-				 parameterType.ToString().Contains("String") ||
-				 parameterType.ToString().Contains("Object")))
+			if (parameter.Type == null)
+			{
+				continue;
+			}
+
+			var typeName = parameter.Type.ToString();
+
+			// Explicitly check for reference types by name
+			if (typeName == "string" || typeName == "object" ||
+				typeName.Contains("String") || typeName.Contains("Object") ||
+				typeName.Contains("Exception") || typeName.Contains("Collection") ||
+				typeName.Contains("List") || typeName.Contains("Dictionary") ||
+				typeName.Contains("Array") || typeName.Contains("Enumerable"))
 			{
 				referenceParams.Add(parameter.Identifier.ValueText);
+			}
+			// Explicitly exclude common value types
+			else if (typeName is "int" or "long" or "short" or
+					 "byte" or "uint" or "ulong" or
+					 "ushort" or "sbyte" or "float" or
+					 "double" or "decimal" or "bool" or
+					 "char" or "DateTime" or "Guid")
+			{
+				// Skip value types
+				continue;
+			}
+			// For other types, try semantic model as fallback
+			else
+			{
+				var parameterType = semanticModel.GetTypeInfo(parameter.Type).Type;
+				if (parameterType != null && parameterType.IsReferenceType)
+				{
+					referenceParams.Add(parameter.Identifier.ValueText);
+				}
 			}
 		}
 
@@ -117,12 +149,12 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 		// Get method body statements
 		var statements = GetMethodStatements(method);
 		if (!statements.Any())
+		{
 			return unvalidated;
+		}
 
 		// Look for null validation patterns in all statements
-		var firstStatements = statements;
-
-		foreach (var statement in firstStatements)
+		foreach (var statement in statements)
 		{
 			var validatedParameter = FindValidatedParameter(statement, referenceParameters);
 			if (!string.IsNullOrEmpty(validatedParameter))
@@ -143,20 +175,20 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 
 		// For expression-bodied methods, we can't easily validate null parameters
 		// So we consider them as not having validation
-		return Enumerable.Empty<StatementSyntax>();
+		return [];
 	}
 
 	private static string? FindValidatedParameter(StatementSyntax statement, List<string> referenceParameters)
 	{
 		// Look for patterns like:
-		// if (parameter == null) return Result.Fail(...);
-		// if (parameter is null) return Result.Fail(...);
+		// if (parameter == null) throw new ArgumentNullException(nameof(parameter));
+		// if (parameter is null) throw new ArgumentNullException(nameof(parameter));
 		// ArgumentNullException.ThrowIfNull(parameter);
 
 		if (statement is IfStatementSyntax ifStatement)
 		{
 			var condition = ifStatement.Condition;
-			
+
 			// Handle binary expressions like "parameter == null" or "parameter is null"
 			if (condition is BinaryExpressionSyntax binaryExpr)
 			{
@@ -224,20 +256,22 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 		// Look for: throw new ArgumentNullException(nameof(parameter))
 		// or: return Result.Fail(...)
 		// or: ArgumentNullException.ThrowIfNull(parameter)
-		
+
 		if (ifStatement.Statement is BlockSyntax block)
 		{
 			foreach (var statement in block.Statements)
 			{
 				if (IsValidValidationStatement(statement))
+				{
 					return true;
+				}
 			}
 		}
 		else if (IsValidValidationStatement(ifStatement.Statement))
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -250,7 +284,7 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 		{
 			return true;
 		}
-		
+
 		// Check for return Result.Fail(...)
 		if (statement is ReturnStatementSyntax returnStatement &&
 			returnStatement.Expression is InvocationExpressionSyntax invocation &&
@@ -258,7 +292,7 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 		{
 			return true;
 		}
-		
+
 		// Check for ArgumentNullException.ThrowIfNull(parameter)
 		if (statement is ExpressionStatementSyntax exprStatement &&
 			exprStatement.Expression is InvocationExpressionSyntax invocationExpr &&
@@ -266,35 +300,26 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 		{
 			return true;
 		}
-		
+
 		// Check for any throw statement (more permissive)
 		if (statement is ThrowStatementSyntax)
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
 
-	private static string GetIdentifierFromExpression(ExpressionSyntax expression)
+	private static string GetIdentifierFromExpression(ExpressionSyntax expression) => expression switch
 	{
-		return expression switch
-		{
-			IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
-			_ => string.Empty
-		};
-	}
+		IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
+		_ => string.Empty
+	};
 
-	private static bool IsNullLiteral(ExpressionSyntax expression)
-	{
-		return expression is LiteralExpressionSyntax literal &&
+	private static bool IsNullLiteral(ExpressionSyntax expression) => expression is LiteralExpressionSyntax literal &&
 			   literal.Token.IsKind(SyntaxKind.NullKeyword);
-	}
 
-	private static bool IsNullPattern(PatternSyntax pattern)
-	{
-		return pattern is ConstantPatternSyntax constantPattern &&
+	private static bool IsNullPattern(PatternSyntax pattern) => pattern is ConstantPatternSyntax constantPattern &&
 			   constantPattern.Expression is LiteralExpressionSyntax literal &&
 			   literal.Token.IsKind(SyntaxKind.NullKeyword);
-	}
 }

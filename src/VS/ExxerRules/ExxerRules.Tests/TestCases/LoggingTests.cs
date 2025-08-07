@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
-using ExxerRules.Analyzers.Logging;
 using ExxerRules.Analyzers;
+using ExxerRules.Analyzers.Logging;
 using ExxerRules.Tests.Testing;
-using Xunit;
+using Microsoft.CodeAnalysis;
 using Shouldly;
+using Xunit;
 
 namespace ExxerRules.Tests.TestCases;
 
@@ -163,10 +163,10 @@ namespace TestProject
 		// Let's analyze the syntax tree manually
 		var tree = Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTree.ParseText(testCode);
 		var root = tree.GetRoot();
-		
+
 		// Find all invocation expressions
 		var invocations = root.DescendantNodes().OfType<Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax>();
-		
+
 		foreach (var invocation in invocations)
 		{
 			if (invocation.Expression is Microsoft.CodeAnalysis.CSharp.Syntax.MemberAccessExpressionSyntax memberAccess)
@@ -184,7 +184,7 @@ namespace TestProject
 				}
 			}
 		}
-		
+
 		// This test should always pass, it's just for debugging
 		true.ShouldBeTrue();
 	}

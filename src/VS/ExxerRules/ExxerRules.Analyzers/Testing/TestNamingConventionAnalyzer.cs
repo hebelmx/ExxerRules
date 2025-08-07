@@ -1,12 +1,12 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
 
 namespace ExxerRules.Analyzers.Testing;
 
@@ -48,13 +48,15 @@ public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
 		// Check if this is a test method using FluentResults pattern
 		var testAttributeResult = PatternDetector.DetectTestAttributes(methodDeclaration, context.SemanticModel);
 		if (testAttributeResult.IsFailed || !testAttributeResult.Value.HasTestAttributes)
+		{
 			return;
+		}
 
 		var methodName = methodDeclaration.Identifier.ValueText;
 
 		// Validate naming convention using FluentResults pattern
 		var namingValidationResult = PatternDetector.ValidateMethodNaming(
-			methodName, 
+			methodName,
 			@"^Should_[A-Z][a-zA-Z0-9]*(_When_[A-Z][a-zA-Z0-9]*)?$");
 
 		// Use the extension method to report diagnostic if validation failed

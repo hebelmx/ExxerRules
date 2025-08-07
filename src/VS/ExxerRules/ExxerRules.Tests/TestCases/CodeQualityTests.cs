@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
-using ExxerRules.Analyzers.CodeQuality;
 using ExxerRules.Analyzers;
+using ExxerRules.Analyzers.CodeQuality;
 using ExxerRules.Tests.Testing;
-using Xunit;
+using Microsoft.CodeAnalysis;
 using Shouldly;
+using Xunit;
 
 namespace ExxerRules.Tests.TestCases;
 

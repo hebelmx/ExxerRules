@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
 using System.Linq;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
 
 namespace ExxerRules.Analyzers.Logging;
 
@@ -47,11 +47,13 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
 
 		// Check if this is a Console.WriteLine or Console.Write call
 		if (!IsConsoleWriteCall(invocation, context.SemanticModel))
+		{
 			return;
+		}
 
 		// Get the method name for reporting
 		var methodName = GetConsoleMethodName(invocation);
-		
+
 		// Report diagnostic for Console write usage
 		var diagnostic = Diagnostic.Create(
 			Rule,
@@ -63,21 +65,28 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
 	private static bool IsConsoleWriteCall(InvocationExpressionSyntax invocation, SemanticModel semanticModel)
 	{
 		// Check if it's a member access on Console
-		var memberAccess = invocation.Expression as MemberAccessExpressionSyntax;
-		if (memberAccess == null)
+		if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
+		{
 			return false;
+		}
 
 		// Check if the method is WriteLine, Write, or similar
 		var methodName = memberAccess.Name.Identifier.ValueText;
 		if (!IsConsoleWriteMethodName(methodName))
+		{
 			return false;
+		}
 
 		// Check if the receiver is Console (syntactic check first)
 		if (memberAccess.Expression is not IdentifierNameSyntax identifierName)
+		{
 			return false;
+		}
 
 		if (identifierName.Identifier.ValueText != "Console")
+		{
 			return false;
+		}
 
 		// Try to verify it's the System.Console type through semantic model
 		// If semantic model fails, we'll rely on the syntactic check
@@ -110,17 +119,17 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
 		return consoleMethods.Contains(methodName);
 	}
 
-	private static bool IsSystemConsole(INamedTypeSymbol typeSymbol)
-	{
+	private static bool IsSystemConsole(INamedTypeSymbol typeSymbol) =>
 		// Check if it's System.Console
-		return typeSymbol.Name == "Console" &&
+		typeSymbol.Name == "Console" &&
 			   GetFullNamespace(typeSymbol.ContainingNamespace) == "System";
-	}
 
 	private static string GetFullNamespace(INamespaceSymbol? namespaceSymbol)
 	{
 		if (namespaceSymbol == null || namespaceSymbol.IsGlobalNamespace)
+		{
 			return string.Empty;
+		}
 
 		var parts = new List<string>();
 		var current = namespaceSymbol;

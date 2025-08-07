@@ -39,11 +39,9 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
 		context.RegisterCompilationStartAction(OnCompilationStart);
 	}
 
-	private static void OnCompilationStart(CompilationStartAnalysisContext context)
-	{
+	private static void OnCompilationStart(CompilationStartAnalysisContext context) =>
 		// Register syntax tree analysis to provide formatting action on every file
 		context.RegisterSyntaxTreeAction(AnalyzeSyntaxTree);
-	}
 
 	private static void AnalyzeSyntaxTree(SyntaxTreeAnalysisContext context)
 	{
@@ -51,7 +49,7 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
 		var root = context.Tree.GetRoot(context.CancellationToken);
 		if (root.HasLeadingTrivia || root.ChildNodes().Any())
 		{
-			var location = root.ChildNodes().FirstOrDefault()?.GetLocation() ?? 
+			var location = root.ChildNodes().FirstOrDefault()?.GetLocation() ??
 						  Location.Create(context.Tree, new Microsoft.CodeAnalysis.Text.TextSpan(0, 0));
 
 			// Report a hidden diagnostic that can be used to trigger formatting

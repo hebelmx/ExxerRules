@@ -23,7 +23,9 @@ public static class AnalysisExtensions
 		Func<TSource, TDestination> mapper)
 	{
 		if (result.IsFailed)
+		{
 			return Result.Fail<TDestination>(result.Errors);
+		}
 
 		try
 		{
@@ -49,7 +51,9 @@ public static class AnalysisExtensions
 		Func<TSource, Result<TDestination>> binder)
 	{
 		if (result.IsFailed)
+		{
 			return Result.Fail<TDestination>(result.Errors);
+		}
 
 		try
 		{
@@ -91,10 +95,7 @@ public static class AnalysisExtensions
 	/// <param name="result">The source result.</param>
 	/// <param name="defaultValue">The default value to use if the result failed.</param>
 	/// <returns>A successful result with either the original value or the default value.</returns>
-	public static Result<T> IfFailed<T>(this Result<T> result, T defaultValue)
-	{
-		return result.IsFailed ? AnalysisResult.Success(defaultValue) : result;
-	}
+	public static Result<T> IfFailed<T>(this Result<T> result, T defaultValue) => result.IsFailed ? AnalysisResult.Success(defaultValue) : result;
 
 	/// <summary>
 	/// Reports a diagnostic if the analysis result indicates a violation.
@@ -147,23 +148,17 @@ public static class AnalysisExtensions
 	/// <param name="node">The syntax node to validate.</param>
 	/// <param name="parameterName">The parameter name for error reporting.</param>
 	/// <returns>A result containing the validated node or an error.</returns>
-	public static Result<T> ValidateNotNull<T>(this T? node, string parameterName) 
-		where T : SyntaxNode
-	{
-		return node != null 
-			? AnalysisResult.Success(node) 
+	public static Result<T> ValidateNotNull<T>(this T? node, string parameterName)
+		where T : SyntaxNode => node != null
+			? AnalysisResult.Success(node)
 			: AnalysisResult.Failure<T>($"{parameterName} cannot be null");
-	}
 
 	/// <summary>
 	/// Safely gets a string representation of a syntax node.
 	/// </summary>
 	/// <param name="node">The syntax node.</param>
 	/// <returns>A result containing the string representation or an error.</returns>
-	public static Result<string> ToStringResult(this SyntaxNode? node)
-	{
-		return node?.ToString() is string str
+	public static Result<string> ToStringResult(this SyntaxNode? node) => node?.ToString() is string str
 			? AnalysisResult.Success(str)
 			: AnalysisResult.Failure<string>("Node is null or cannot be converted to string");
-	}
 }

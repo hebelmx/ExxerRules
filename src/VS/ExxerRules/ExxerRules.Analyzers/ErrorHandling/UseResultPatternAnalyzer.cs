@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
 using System.Linq;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
 
 namespace ExxerRules.Analyzers.ErrorHandling;
 
@@ -46,14 +46,18 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 	private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
 	{
 		var methodDeclaration = (MethodDeclarationSyntax)context.Node;
-		
+
 		// Skip if method already returns Result<T>
 		if (IsResultReturnType(methodDeclaration.ReturnType))
+		{
 			return;
+		}
 
 		// Skip if this is a method that should be exempted
 		if (IsSkippableMethod(methodDeclaration))
+		{
 			return;
+		}
 
 		// Check for throw statements and expressions using functional approach
 		var throwStatements = methodDeclaration.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
@@ -73,11 +77,15 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 	{
 		// Skip constructors, destructors, and event handlers
 		if (method.Identifier.Text.StartsWith("On") && method.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+		{
 			return true;
+		}
 
 		// Skip Main method
 		if (method.Identifier.Text == "Main")
+		{
 			return true;
+		}
 
 		return false;
 	}
@@ -88,7 +96,9 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 
 		// Skip if property already returns Result<T>
 		if (IsResultReturnType(propertyDeclaration.Type))
+		{
 			return;
+		}
 
 		// Check accessors for throw statements using functional approach
 		var accessorThrows = CheckAccessorsForThrows(propertyDeclaration);
@@ -107,17 +117,16 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 	private static bool CheckAccessorsForThrows(PropertyDeclarationSyntax property)
 	{
 		if (property.AccessorList == null)
+		{
 			return false;
+		}
 
 		return property.AccessorList.Accessors.Any(accessor =>
 			accessor.DescendantNodes().OfType<ThrowStatementSyntax>().Any() ||
 			accessor.DescendantNodes().OfType<ThrowExpressionSyntax>().Any());
 	}
 
-	private static bool CheckExpressionBodyForThrows(PropertyDeclarationSyntax property)
-	{
-		return property.ExpressionBody?.DescendantNodes().OfType<ThrowExpressionSyntax>().Any() == true;
-	}
+	private static bool CheckExpressionBodyForThrows(PropertyDeclarationSyntax property) => property.ExpressionBody?.DescendantNodes().OfType<ThrowExpressionSyntax>().Any() == true;
 
 	private static void AnalyzeLocalFunction(SyntaxNodeAnalysisContext context)
 	{
@@ -125,7 +134,9 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 
 		// Skip if function already returns Result<T>
 		if (IsResultReturnType(localFunction.ReturnType))
+		{
 			return;
+		}
 
 		// Check for throw statements and expressions
 		var throwStatements = localFunction.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
@@ -151,7 +162,9 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 		};
 
 		if (lambda == null)
+		{
 			return;
+		}
 
 		// Check for throw statements and expressions
 		var throwStatements = lambda.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
@@ -170,7 +183,9 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 	private static bool IsResultReturnType(TypeSyntax? typeSyntax)
 	{
 		if (typeSyntax == null)
+		{
 			return false;
+		}
 
 		// Check for Result<T> or Task<Result<T>>
 		var typeText = typeSyntax.ToString();

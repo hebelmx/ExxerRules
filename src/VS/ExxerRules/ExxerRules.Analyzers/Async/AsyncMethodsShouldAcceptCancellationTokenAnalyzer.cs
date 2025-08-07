@@ -1,12 +1,12 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
-using System.Collections.Generic;
 
 namespace ExxerRules.Analyzers.Async;
 
@@ -48,19 +48,27 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
 
 		// Only analyze async methods
 		if (!IsAsyncMethod(methodDeclaration))
+		{
 			return;
+		}
 
 		// Skip async void methods (typically event handlers)
 		if (IsAsyncVoidMethod(methodDeclaration))
+		{
 			return;
+		}
 
 		// Skip if this is a method that should be exempted
 		if (IsSkippableMethod(methodDeclaration))
+		{
 			return;
+		}
 
 		// Check if method already has CancellationToken parameter
 		if (HasCancellationTokenParameter(methodDeclaration, context.SemanticModel))
+		{
 			return;
+		}
 
 		// Report diagnostic for missing CancellationToken
 		var diagnostic = Diagnostic.Create(
@@ -70,33 +78,33 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
 		context.ReportDiagnostic(diagnostic);
 	}
 
-	private static bool IsAsyncMethod(MethodDeclarationSyntax method)
-	{
+	private static bool IsAsyncMethod(MethodDeclarationSyntax method) =>
 		// Check if method has async modifier
-		return method.Modifiers.Any(SyntaxKind.AsyncKeyword);
-	}
+		method.Modifiers.Any(SyntaxKind.AsyncKeyword);
 
-	private static bool IsAsyncVoidMethod(MethodDeclarationSyntax method)
-	{
+	private static bool IsAsyncVoidMethod(MethodDeclarationSyntax method) =>
 		// Check if return type is void (async void methods are typically event handlers)
-		return method.ReturnType is PredefinedTypeSyntax predefined &&
+		method.ReturnType is PredefinedTypeSyntax predefined &&
 			   predefined.Keyword.IsKind(SyntaxKind.VoidKeyword);
-	}
 
 	private static bool IsSkippableMethod(MethodDeclarationSyntax method)
 	{
 		// Skip Main method
 		if (method.Identifier.Text == "Main")
+		{
 			return true;
+		}
 
 		// Skip interface methods (they don't have bodies to implement cancellation)
 		if (method.Body == null && method.ExpressionBody == null)
+		{
 			return true;
+		}
 
 		// Skip methods that look like event handlers by naming convention
 		var methodName = method.Identifier.Text;
-		if (methodName.Contains("_Click") || 
-			methodName.Contains("_Changed") || 
+		if (methodName.Contains("_Click") ||
+			methodName.Contains("_Changed") ||
 			methodName.Contains("_Load") ||
 			methodName.StartsWith("On"))
 		{
@@ -111,9 +119,9 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
 		foreach (var parameter in method.ParameterList.Parameters)
 		{
 			var parameterType = semanticModel.GetTypeInfo(parameter.Type!).Type;
-			
+
 			// Check if parameter type is CancellationToken
-			if (parameterType != null && 
+			if (parameterType != null &&
 				IsCancellationTokenType(parameterType))
 			{
 				return true;
@@ -135,14 +143,16 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
 
 		// Check for fully qualified name
 		var fullName = GetFullTypeName(typeSymbol);
-		return fullName == "System.Threading.CancellationToken" || 
-			   fullName == "CancellationToken";
+		return fullName is "System.Threading.CancellationToken" or
+			   "CancellationToken";
 	}
 
 	private static string GetFullTypeName(ITypeSymbol typeSymbol)
 	{
 		if (typeSymbol == null)
+		{
 			return string.Empty;
+		}
 
 		var parts = new List<string>();
 		var current = typeSymbol;

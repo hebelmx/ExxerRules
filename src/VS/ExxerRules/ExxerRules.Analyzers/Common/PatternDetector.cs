@@ -19,10 +19,14 @@ public static class PatternDetector
 	public static Result<bool> ValidateMethodNaming(string methodName, string pattern)
 	{
 		if (string.IsNullOrWhiteSpace(methodName))
+		{
 			return AnalysisResult.Failure<bool>("Method name cannot be null or empty");
+		}
 
 		if (string.IsNullOrWhiteSpace(pattern))
+		{
 			return AnalysisResult.Failure<bool>("Pattern cannot be null or empty");
+		}
 
 		try
 		{
@@ -45,10 +49,14 @@ public static class PatternDetector
 	public static Result<TestAttributeInfo> DetectTestAttributes(MethodDeclarationSyntax method, SemanticModel semanticModel)
 	{
 		if (method == null)
+		{
 			return AnalysisResult.Failure<TestAttributeInfo>("Method cannot be null");
+		}
 
 		if (semanticModel == null)
+		{
 			return AnalysisResult.Failure<TestAttributeInfo>("Semantic model cannot be null");
+		}
 
 		var testAttributes = new[]
 		{
@@ -65,9 +73,9 @@ public static class PatternDetector
 			foreach (var attribute in attributeList.Attributes)
 			{
 				var attributeName = attribute.Name.ToString();
-				
-				var matchingAttribute = testAttributes.FirstOrDefault(ta => 
-					attributeName == ta || 
+
+				var matchingAttribute = testAttributes.FirstOrDefault(ta =>
+					attributeName == ta ||
 					attributeName.EndsWith("." + ta.Split('.').Last()) ||
 					ta.EndsWith("." + attributeName));
 
@@ -106,10 +114,12 @@ public static class PatternDetector
 	public static Result<bool> DetectTestClass(ClassDeclarationSyntax classDeclaration)
 	{
 		if (classDeclaration == null)
+		{
 			return AnalysisResult.Failure<bool>("Class declaration cannot be null");
+		}
 
 		var className = classDeclaration.Identifier.ValueText;
-		
+
 		// Check naming patterns
 		var testClassSuffixes = new[] { "Tests", "Test", "Specs", "Spec" };
 		var hasTestSuffix = testClassSuffixes.Any(suffix => className.EndsWith(suffix));
@@ -118,7 +128,7 @@ public static class PatternDetector
 		var testClassAttributes = new[] { "TestClass", "TestFixture" };
 		var hasTestAttribute = classDeclaration.AttributeLists
 			.SelectMany(list => list.Attributes)
-			.Any(attr => testClassAttributes.Any(testAttr => 
+			.Any(attr => testClassAttributes.Any(testAttr =>
 				attr.Name.ToString().Contains(testAttr)));
 
 		var isTestClass = hasTestSuffix || hasTestAttribute;
@@ -128,13 +138,19 @@ public static class PatternDetector
 	private static TestFramework GetTestFramework(List<string> attributes)
 	{
 		if (attributes.Any(a => a.Contains("Xunit") || a == "Fact" || a == "Theory"))
+		{
 			return TestFramework.XUnit;
-		
+		}
+
 		if (attributes.Any(a => a.Contains("NUnit") || a == "Test"))
+		{
 			return TestFramework.NUnit;
-		
+		}
+
 		if (attributes.Any(a => a.Contains("Microsoft.VisualStudio.TestTools") || a == "TestMethod"))
+		{
 			return TestFramework.MSTest;
+		}
 
 		return TestFramework.Unknown;
 	}
@@ -143,35 +159,29 @@ public static class PatternDetector
 /// <summary>
 /// Information about test attributes found on a method.
 /// </summary>
-public class TestAttributeInfo
+/// <remarks>
+/// Initializes a new instance of the <see cref="TestAttributeInfo"/> class.
+/// </remarks>
+/// <param name="attributeNames">The names of the test attributes found.</param>
+/// <param name="hasTestAttributes">Whether any test attributes were found.</param>
+/// <param name="framework">The detected test framework.</param>
+public class TestAttributeInfo(IReadOnlyList<string> attributeNames, bool hasTestAttributes, TestFramework framework)
 {
-	/// <summary>
-	/// Initializes a new instance of the <see cref="TestAttributeInfo"/> class.
-	/// </summary>
-	/// <param name="attributeNames">The names of the test attributes found.</param>
-	/// <param name="hasTestAttributes">Whether any test attributes were found.</param>
-	/// <param name="framework">The detected test framework.</param>
-	public TestAttributeInfo(IReadOnlyList<string> attributeNames, bool hasTestAttributes, TestFramework framework)
-	{
-		AttributeNames = attributeNames ?? throw new ArgumentNullException(nameof(attributeNames));
-		HasTestAttributes = hasTestAttributes;
-		Framework = framework;
-	}
 
 	/// <summary>
 	/// Gets the names of the test attributes found.
 	/// </summary>
-	public IReadOnlyList<string> AttributeNames { get; }
+	public IReadOnlyList<string> AttributeNames { get; } = attributeNames ?? throw new ArgumentNullException(nameof(attributeNames));
 
 	/// <summary>
 	/// Gets a value indicating whether any test attributes were found.
 	/// </summary>
-	public bool HasTestAttributes { get; }
+	public bool HasTestAttributes { get; } = hasTestAttributes;
 
 	/// <summary>
 	/// Gets the detected test framework.
 	/// </summary>
-	public TestFramework Framework { get; }
+	public TestFramework Framework { get; } = framework;
 }
 
 /// <summary>

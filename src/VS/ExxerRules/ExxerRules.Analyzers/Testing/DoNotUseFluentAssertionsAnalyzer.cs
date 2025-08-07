@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
 
 namespace ExxerRules.Analyzers.Testing;
 
@@ -49,9 +49,9 @@ public class DoNotUseFluentAssertionsAnalyzer : DiagnosticAnalyzer
 	private static void AnalyzeUsingDirective(SyntaxNodeAnalysisContext context)
 	{
 		var usingDirective = (UsingDirectiveSyntax)context.Node;
-		
+
 		var nameString = usingDirective.Name?.ToString();
-		
+
 		// Exact match for FluentAssertions (not Shouldly or other frameworks)
 		if (nameString == "FluentAssertions")
 		{
@@ -66,7 +66,7 @@ public class DoNotUseFluentAssertionsAnalyzer : DiagnosticAnalyzer
 	private static void AnalyzeMemberAccess(SyntaxNodeAnalysisContext context)
 	{
 		var memberAccess = (MemberAccessExpressionSyntax)context.Node;
-		
+
 		// Check for .Should() calls which are characteristic of FluentAssertions
 		if (memberAccess.Name.Identifier.ValueText == "Should")
 		{
@@ -77,14 +77,14 @@ public class DoNotUseFluentAssertionsAnalyzer : DiagnosticAnalyzer
 				".Should()");
 			context.ReportDiagnostic(diagnostic);
 		}
-		
+
 		// Check for other common FluentAssertions patterns
 		var fluentAssertionsMethods = new[]
 		{
 			"Be", "BeEquivalentTo", "BeNull", "BeEmpty", "Contain",
 			"HaveCount", "Match", "Satisfy", "BeOfType"
 		};
-		
+
 		if (fluentAssertionsMethods.Contains(memberAccess.Name.Identifier.ValueText))
 		{
 			// Check if this is likely part of a FluentAssertions chain
@@ -115,7 +115,9 @@ public class DoNotUseFluentAssertionsAnalyzer : DiagnosticAnalyzer
 	private static string GetFullNamespace(INamespaceSymbol? namespaceSymbol)
 	{
 		if (namespaceSymbol == null || namespaceSymbol.IsGlobalNamespace)
+		{
 			return string.Empty;
+		}
 
 		var parts = new List<string>();
 		var current = namespaceSymbol;

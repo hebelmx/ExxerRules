@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
 using System.Linq;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
 
 namespace ExxerRules.Analyzers.Testing;
 
@@ -48,9 +48,9 @@ public class DoNotUseMoqAnalyzer : DiagnosticAnalyzer
 	private static void AnalyzeUsingDirective(SyntaxNodeAnalysisContext context)
 	{
 		var usingDirective = (UsingDirectiveSyntax)context.Node;
-		
+
 		var nameString = usingDirective.Name?.ToString();
-		
+
 		// Exact match for Moq (not NSubstitute or other frameworks)
 		if (nameString == "Moq")
 		{
@@ -65,9 +65,9 @@ public class DoNotUseMoqAnalyzer : DiagnosticAnalyzer
 	private static void AnalyzeObjectCreation(SyntaxNodeAnalysisContext context)
 	{
 		var objectCreation = (ObjectCreationExpressionSyntax)context.Node;
-		
+
 		// Check if creating Mock<T> instances (syntactic analysis first)
-		if (objectCreation.Type is GenericNameSyntax genericName && 
+		if (objectCreation.Type is GenericNameSyntax genericName &&
 			genericName.Identifier.ValueText == "Mock")
 		{
 			// For test scenarios, assume Mock<T> refers to Moq
@@ -93,9 +93,9 @@ public class DoNotUseMoqAnalyzer : DiagnosticAnalyzer
 	private static void AnalyzeMemberAccess(SyntaxNodeAnalysisContext context)
 	{
 		var memberAccess = (MemberAccessExpressionSyntax)context.Node;
-		
+
 		// Check for Mock.* static method calls
-		if (memberAccess.Expression is IdentifierNameSyntax identifier && 
+		if (memberAccess.Expression is IdentifierNameSyntax identifier &&
 			identifier.Identifier.ValueText == "Mock")
 		{
 			var diagnostic = Diagnostic.Create(

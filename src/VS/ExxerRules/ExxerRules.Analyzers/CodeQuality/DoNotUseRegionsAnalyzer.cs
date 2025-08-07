@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
 using System.Linq;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
 
 namespace ExxerRules.Analyzers.CodeQuality;
 
@@ -53,7 +53,7 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
 		{
 			// Extract region name from the directive
 			var regionName = GetRegionName(regionDirective);
-			
+
 			// Report diagnostic for each region
 			var diagnostic = Diagnostic.Create(
 				Rule,
@@ -67,14 +67,16 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
 	{
 		// Get the text of the region directive and extract the name
 		var text = regionDirective.ToString();
-		
+
 		// Remove "#region" prefix and trim whitespace
 		var name = text.Replace("#region", "").Trim();
-		
+
 		// If no name was provided, use a default
 		if (string.IsNullOrEmpty(name))
+		{
 			return "unnamed region";
-		
+		}
+
 		return name;
 	}
 }

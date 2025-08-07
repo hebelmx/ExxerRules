@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
 using System.Linq;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
 
 namespace ExxerRules.Analyzers.Documentation;
 
@@ -75,10 +75,12 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
 	private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
 	{
 		var methodDeclaration = (MethodDeclarationSyntax)context.Node;
-		
+
 		// Skip special methods
 		if (IsSkippableMethod(methodDeclaration))
+		{
 			return;
+		}
 
 		AnalyzeMember(context, methodDeclaration, methodDeclaration.Modifiers, methodDeclaration.Identifier, "method");
 	}
@@ -92,10 +94,12 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
 	private static void AnalyzeField(SyntaxNodeAnalysisContext context)
 	{
 		var fieldDeclaration = (FieldDeclarationSyntax)context.Node;
-		
+
 		// Skip const fields (they're often obvious)
 		if (fieldDeclaration.Modifiers.Any(SyntaxKind.ConstKeyword))
+		{
 			return;
+		}
 
 		foreach (var variable in fieldDeclaration.Declaration.Variables)
 		{
@@ -110,15 +114,17 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
 	}
 
 	private static void AnalyzeMember(
-		SyntaxNodeAnalysisContext context, 
-		SyntaxNode node, 
-		SyntaxTokenList modifiers, 
-		SyntaxToken identifier, 
+		SyntaxNodeAnalysisContext context,
+		SyntaxNode node,
+		SyntaxTokenList modifiers,
+		SyntaxToken identifier,
 		string memberType)
 	{
 		// Only analyze public members or interface members
 		if (!IsPublicMember(modifiers) && !IsInterfaceMember(node))
+		{
 			return;
+		}
 
 		// Check if member has XML documentation
 		if (!HasXmlDocumentation(node))
@@ -132,12 +138,10 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
 		}
 	}
 
-	private static bool IsPublicMember(SyntaxTokenList modifiers)
-	{
+	private static bool IsPublicMember(SyntaxTokenList modifiers) =>
 		// Member is public if it explicitly has public modifier
 		// OR if it's in an interface (interface members are implicitly public)
-		return modifiers.Any(SyntaxKind.PublicKeyword);
-	}
+		modifiers.Any(SyntaxKind.PublicKeyword);
 
 	private static bool IsInterfaceMember(SyntaxNode node)
 	{
@@ -146,7 +150,10 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
 		while (parent != null)
 		{
 			if (parent is InterfaceDeclarationSyntax)
+			{
 				return true;
+			}
+
 			parent = parent.Parent;
 		}
 		return false;
@@ -156,7 +163,7 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
 	{
 		// Check for XML documentation comments (///)
 		var leadingTrivia = node.GetLeadingTrivia();
-		
+
 		return leadingTrivia.Any(trivia =>
 			trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia) ||
 			trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia));
@@ -168,19 +175,27 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
 
 		// Skip Main method
 		if (methodName == "Main")
+		{
 			return true;
+		}
 
 		// Skip override methods (they inherit documentation)
 		if (method.Modifiers.Any(SyntaxKind.OverrideKeyword))
+		{
 			return true;
+		}
 
 		// Skip interface implementations (they should be documented on the interface)
 		if (method.ExplicitInterfaceSpecifier != null)
+		{
 			return true;
+		}
 
 		// Skip constructors and destructors (often self-explanatory)
 		if (method.Modifiers.Any(SyntaxKind.StaticKeyword) && methodName.EndsWith("Constructor"))
+		{
 			return true;
+		}
 
 		return false;
 	}

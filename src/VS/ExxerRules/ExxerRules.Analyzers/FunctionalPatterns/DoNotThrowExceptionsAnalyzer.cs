@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
 using System.Linq;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
 
 namespace ExxerRules.Analyzers.FunctionalPatterns;
 
@@ -47,15 +47,19 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
 
 		// Skip rethrow statements (throw; without expression)
 		if (throwStatement.Expression == null)
+		{
 			return;
+		}
 
 		// Skip if we're in a catch block doing a proper rethrow with transformation
 		if (IsInCatchBlockRethrow(throwStatement))
+		{
 			return;
+		}
 
 		// Get exception type name for reporting
 		var exceptionType = GetExceptionTypeName(throwStatement.Expression);
-		
+
 		// Report diagnostic for exception throwing
 		var diagnostic = Diagnostic.Create(
 			Rule,
@@ -69,22 +73,21 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
 		// Check if this throw is inside a catch block
 		var catchClause = throwStatement.FirstAncestorOrSelf<CatchClauseSyntax>();
 		if (catchClause == null)
+		{
 			return false;
+		}
 
 		// Allow rethrowing with transformation or wrapping
 		// This is a simplified check - in practice you might want more sophisticated logic
 		return false; // For now, flag all throws as we want Result<T> pattern
 	}
 
-	private static string GetExceptionTypeName(ExpressionSyntax expression)
+	private static string GetExceptionTypeName(ExpressionSyntax expression) => expression switch
 	{
-		return expression switch
-		{
-			ObjectCreationExpressionSyntax objectCreation when objectCreation.Type != null => 
-				objectCreation.Type.ToString(),
-			ThrowExpressionSyntax throwExpression when throwExpression.Expression is ObjectCreationExpressionSyntax obj => 
-				obj.Type?.ToString() ?? "Exception",
-			_ => "Exception"
-		};
-	}
+		ObjectCreationExpressionSyntax objectCreation when objectCreation.Type != null =>
+			objectCreation.Type.ToString(),
+		ThrowExpressionSyntax throwExpression when throwExpression.Expression is ObjectCreationExpressionSyntax obj =>
+			obj.Type?.ToString() ?? "Exception",
+		_ => "Exception"
+	};
 }

@@ -128,7 +128,9 @@ public class DoNotMockDbContextAnalyzer : DiagnosticAnalyzer
 		// Extract the generic type argument from Mock<T>
 		var genericArg = ExtractGenericTypeArgument(typeName);
 		if (string.IsNullOrEmpty(genericArg))
+		{
 			return false;
+		}
 
 		// Check if it's a known DbContext type name
 		if (genericArg == "DbContext" || genericArg.EndsWith("DbContext") || genericArg.EndsWith("Context"))
@@ -164,7 +166,7 @@ public class DoNotMockDbContextAnalyzer : DiagnosticAnalyzer
 		var baseType = type.BaseType;
 		while (baseType != null)
 		{
-			if (baseType.Name == "DbContext" && 
+			if (baseType.Name == "DbContext" &&
 				baseType.ContainingNamespace?.ToDisplayString() == "Microsoft.EntityFrameworkCore")
 			{
 				return true;
@@ -180,7 +182,7 @@ public class DoNotMockDbContextAnalyzer : DiagnosticAnalyzer
 		// Extract T from Mock<T>
 		var startIndex = typeName.IndexOf('<');
 		var endIndex = typeName.LastIndexOf('>');
-		
+
 		if (startIndex > 0 && endIndex > startIndex)
 		{
 			return typeName.Substring(startIndex + 1, endIndex - startIndex - 1).Trim();

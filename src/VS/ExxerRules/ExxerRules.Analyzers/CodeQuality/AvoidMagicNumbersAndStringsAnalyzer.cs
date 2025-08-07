@@ -1,12 +1,12 @@
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
+using ExxerRules.Analyzers.Common;
+using FluentResults;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using ExxerRules.Analyzers.Common;
-using FluentResults;
 
 namespace ExxerRules.Analyzers.CodeQuality;
 
@@ -49,15 +49,21 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 
 		// Skip if this is a constant declaration
 		if (IsInConstantDeclaration(literalExpression))
+		{
 			return;
+		}
 
 		// Skip if this is an attribute argument
 		if (IsAttributeArgument(literalExpression))
+		{
 			return;
+		}
 
 		// Skip if this is in a switch expression or case label
 		if (IsInSwitchOrCase(literalExpression))
+		{
 			return;
+		}
 
 		// Analyze based on literal type
 		if (literalExpression.Token.IsKind(SyntaxKind.NumericLiteralToken))
@@ -76,7 +82,9 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 
 		// Skip common numbers that are typically not considered magic
 		if (IsCommonNumber(value))
+		{
 			return;
+		}
 
 		// Report diagnostic for magic number
 		var diagnostic = Diagnostic.Create(
@@ -93,15 +101,21 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 
 		// Skip empty strings and very short strings (often used for formatting)
 		if (string.IsNullOrEmpty(value) || value.Length <= 1)
+		{
 			return;
+		}
 
 		// Skip strings that look like format strings or templates
 		if (IsFormatString(value))
+		{
 			return;
+		}
 
 		// Skip very common strings
 		if (IsCommonString(value))
+		{
 			return;
+		}
 
 		// Report diagnostic for magic string
 		var diagnostic = Diagnostic.Create(
@@ -117,28 +131,26 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 		// Check if we're in a const field declaration
 		var fieldDeclaration = node.FirstAncestorOrSelf<FieldDeclarationSyntax>();
 		if (fieldDeclaration != null && fieldDeclaration.Modifiers.Any(SyntaxKind.ConstKeyword))
+		{
 			return true;
+		}
 
 		// Check if we're in a local const declaration
 		var localDeclaration = node.FirstAncestorOrSelf<LocalDeclarationStatementSyntax>();
 		if (localDeclaration != null && localDeclaration.Modifiers.Any(SyntaxKind.ConstKeyword))
+		{
 			return true;
+		}
 
 		return false;
 	}
 
-	private static bool IsAttributeArgument(SyntaxNode node)
-	{
-		return node.FirstAncestorOrSelf<AttributeArgumentSyntax>() != null ||
+	private static bool IsAttributeArgument(SyntaxNode node) => node.FirstAncestorOrSelf<AttributeArgumentSyntax>() != null ||
 			   node.FirstAncestorOrSelf<AttributeSyntax>() != null;
-	}
 
-	private static bool IsInSwitchOrCase(SyntaxNode node)
-	{
-		return node.FirstAncestorOrSelf<SwitchExpressionArmSyntax>() != null ||
+	private static bool IsInSwitchOrCase(SyntaxNode node) => node.FirstAncestorOrSelf<SwitchExpressionArmSyntax>() != null ||
 			   node.FirstAncestorOrSelf<CaseSwitchLabelSyntax>() != null ||
 			   node.FirstAncestorOrSelf<SwitchExpressionSyntax>() != null;
-	}
 
 	private static bool IsCommonNumber(string value)
 	{
@@ -151,18 +163,16 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 		return commonNumbers.Contains(value);
 	}
 
-	private static bool IsFormatString(string value)
-	{
+	private static bool IsFormatString(string value) =>
 		// Check for format strings like "{0}", "{name}", etc.
-		return value.Contains('{') && value.Contains('}');
-	}
+		value.Contains('{') && value.Contains('}');
 
 	private static bool IsCommonString(string value)
 	{
 		// Very common strings that might be acceptable
 		var commonStrings = new[]
 		{
-			" ", "\n", "\r\n", "\t", ",", ".", ":", ";", 
+			" ", "\n", "\r\n", "\t", ",", ".", ":", ";",
 			"true", "false", "null", "undefined"
 		};
 
