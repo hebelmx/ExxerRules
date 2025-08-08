@@ -1,0 +1,33 @@
+# VS Code Extension .vscodeignore
+# Files to exclude from the extension package
+
+# Source files
+src/**
+tsconfig.json
+.vscode-test/**
+
+# Build artifacts
+out/test/**
+.nyc_output/**
+coverage/**
+
+# Development files
+node_modules/**
+.vscode/**
+.gitignore
+.eslintrc.json
+
+# Test files
+**/*.test.js
+**/*.test.ts
+
+# Documentation (keep README.md)
+docs/**
+
+# Package files
+package-lock.json
+yarn.lock
+
+# Logs
+*.log
+logs/**

@@ -1,0 +1,157 @@
+{
+  "name": "exxer-rules-vscode",
+  "displayName": "ExxerRules - Modern Development Conventions",
+  "description": "Comprehensive Roslyn analyzer suite with 20 production-ready analyzers enforcing Modern Development Conventions (MDC). Includes Result<T> pattern enforcement, Clean Architecture validation, modern testing standards, async best practices, and performance optimization.",
+  "version": "1.0.0",
+  "publisher": "ExxerAI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/exxerai/exxer-rules"
+  },
+  "bugs": {
+    "url": "https://github.com/exxerai/exxer-rules/issues"
+  },
+  "homepage": "https://github.com/exxerai/exxer-rules#readme",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Linters",
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "C#",
+    "csharp",
+    "dotnet",
+    "analyzer",
+    "roslyn",
+    "code-quality",
+    "clean-architecture",
+    "result-pattern",
+    "testing",
+    "performance",
+    "async",
+    "modern-csharp",
+    "tdd",
+    "free",
+    "open-source"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "ExxerRules Configuration",
+      "properties": {
+        "exxerRules.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable ExxerRules analyzers"
+        },
+        "exxerRules.severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "info",
+            "hint"
+          ],
+          "default": "warning",
+          "description": "Default severity level for ExxerRules diagnostics"
+        },
+        "exxerRules.categories": {
+          "type": "object",
+          "description": "Enable/disable specific analyzer categories",
+          "properties": {
+            "architecture": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable Clean Architecture analyzers"
+            },
+            "async": {
+              "type": "boolean", 
+              "default": true,
+              "description": "Enable async/await best practice analyzers"
+            },
+            "errorHandling": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable Result<T> pattern and error handling analyzers"
+            },
+            "testing": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable modern testing standard analyzers"
+            },
+            "performance": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable performance optimization analyzers"
+            },
+            "modernCSharp": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable modern C# pattern analyzers"
+            },
+            "codeQuality": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable general code quality analyzers"
+            }
+          }
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "exxerRules.analyzeWorkspace",
+        "title": "Analyze Workspace with ExxerRules",
+        "category": "ExxerRules"
+      },
+      {
+        "command": "exxerRules.showAnalyzerInfo",
+        "title": "Show Analyzer Information",
+        "category": "ExxerRules"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "exxerRules.analyzeWorkspace",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "exxerRules.showAnalyzerInfo"
+        }
+      ]
+    }
+  },
+  "activationEvents": [
+    "onLanguage:csharp"
+  ],
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "typescript": "^4.9.4",
+    "@vscode/test-electron": "^2.2.0",
+    "vsce": "^2.15.0"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "path": "^0.12.7"
+  }
+}
