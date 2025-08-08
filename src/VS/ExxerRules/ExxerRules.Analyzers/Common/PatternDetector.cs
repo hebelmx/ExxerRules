@@ -10,6 +10,36 @@ namespace ExxerRules.Analyzers.Common;
 /// </summary>
 public static class PatternDetector
 {
+	// Constants for error messages to satisfy EXXER500 and IDE1006 (camelCase for private constants)
+	private const string methodNameNullErrorMessage = "Method name cannot be null or empty";
+	private const string patternNullErrorMessage = "Pattern cannot be null or empty";
+	private const string invalidRegexErrorMessage = "Invalid regex pattern: {0}";
+	private const string methodNullErrorMessage = "Method cannot be null";
+	private const string semanticModelNullErrorMessage = "Semantic model cannot be null";
+	private const string classDeclarationNullErrorMessage = "Class declaration cannot be null";
+	private const string cannotBeNullSuffix = " cannot be null";
+	
+	// Test framework constants
+	private const string xunitFramework = "Xunit";
+	private const string factAttribute = "Fact";
+	private const string theoryAttribute = "Theory";
+	private const string nunitFramework = "NUnit";
+	private const string testAttribute = "Test";
+	private const string msTestFramework = "Microsoft.VisualStudio.TestTools";
+	private const string testMethodAttribute = "TestMethod";
+	private const string xunitFactAttribute = "Xunit.Fact";
+	private const string xunitTheoryAttribute = "Xunit.Theory";
+	private const string nunitTestAttribute = "NUnit.Framework.Test";
+	private const string msTestMethodAttribute = "Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod";
+	
+	// Test class constants
+	private const string testsSuffix = "Tests";
+	private const string testSuffix = "Test";
+	private const string specsSuffix = "Specs";
+	private const string specSuffix = "Spec";
+	private const string testClassAttribute = "TestClass";
+	private const string testFixtureAttribute = "TestFixture";
+
 	/// <summary>
 	/// Detects if a method follows the specified naming pattern.
 	/// </summary>
@@ -18,14 +48,25 @@ public static class PatternDetector
 	/// <returns>A result indicating if the pattern matches.</returns>
 	public static Result<bool> ValidateMethodNaming(string methodName, string pattern)
 	{
+		// EXXER200: Validate null parameters
+		if (methodName is null)
+		{
+			return AnalysisResult.Failure<bool>(nameof(methodName) + cannotBeNullSuffix);
+		}
+		
+		if (pattern is null)
+		{
+			return AnalysisResult.Failure<bool>(nameof(pattern) + cannotBeNullSuffix);
+		}
+
 		if (string.IsNullOrWhiteSpace(methodName))
 		{
-			return AnalysisResult.Failure<bool>("Method name cannot be null or empty");
+			return AnalysisResult.Failure<bool>(methodNameNullErrorMessage);
 		}
 
 		if (string.IsNullOrWhiteSpace(pattern))
 		{
-			return AnalysisResult.Failure<bool>("Pattern cannot be null or empty");
+			return AnalysisResult.Failure<bool>(patternNullErrorMessage);
 		}
 
 		try
@@ -36,7 +77,7 @@ public static class PatternDetector
 		}
 		catch (ArgumentException ex)
 		{
-			return AnalysisResult.Failure<bool>($"Invalid regex pattern: {ex.Message}");
+			return AnalysisResult.Failure<bool>(string.Format(invalidRegexErrorMessage, ex.Message));
 		}
 	}
 
@@ -48,22 +89,23 @@ public static class PatternDetector
 	/// <returns>A result containing information about test attributes.</returns>
 	public static Result<TestAttributeInfo> DetectTestAttributes(MethodDeclarationSyntax method, SemanticModel semanticModel)
 	{
-		if (method == null)
+		// EXXER200: Validate null parameters
+		if (method is null)
 		{
-			return AnalysisResult.Failure<TestAttributeInfo>("Method cannot be null");
+			return AnalysisResult.Failure<TestAttributeInfo>(methodNullErrorMessage);
 		}
 
-		if (semanticModel == null)
+		if (semanticModel is null)
 		{
-			return AnalysisResult.Failure<TestAttributeInfo>("Semantic model cannot be null");
+			return AnalysisResult.Failure<TestAttributeInfo>(semanticModelNullErrorMessage);
 		}
 
 		var testAttributes = new[]
 		{
-			"Fact", "Theory", "Test", "TestMethod",
-			"Xunit.Fact", "Xunit.Theory",
-			"NUnit.Framework.Test",
-			"Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod"
+			factAttribute, theoryAttribute, testAttribute, testMethodAttribute,
+			xunitFactAttribute, xunitTheoryAttribute,
+			nunitTestAttribute,
+			msTestMethodAttribute
 		};
 
 		var foundAttributes = new List<string>();
@@ -113,19 +155,20 @@ public static class PatternDetector
 	/// <returns>A result indicating if the class is a test class.</returns>
 	public static Result<bool> DetectTestClass(ClassDeclarationSyntax classDeclaration)
 	{
-		if (classDeclaration == null)
+		// EXXER200: Validate null parameters
+		if (classDeclaration is null)
 		{
-			return AnalysisResult.Failure<bool>("Class declaration cannot be null");
+			return AnalysisResult.Failure<bool>(classDeclarationNullErrorMessage);
 		}
 
 		var className = classDeclaration.Identifier.ValueText;
 
 		// Check naming patterns
-		var testClassSuffixes = new[] { "Tests", "Test", "Specs", "Spec" };
+		var testClassSuffixes = new[] { testsSuffix, testSuffix, specsSuffix, specSuffix };
 		var hasTestSuffix = testClassSuffixes.Any(suffix => className.EndsWith(suffix));
 
 		// Check class attributes
-		var testClassAttributes = new[] { "TestClass", "TestFixture" };
+		var testClassAttributes = new[] { testClassAttribute, testFixtureAttribute };
 		var hasTestAttribute = classDeclaration.AttributeLists
 			.SelectMany(list => list.Attributes)
 			.Any(attr => testClassAttributes.Any(testAttr =>
@@ -137,17 +180,23 @@ public static class PatternDetector
 
 	private static TestFramework GetTestFramework(List<string> attributes)
 	{
-		if (attributes.Any(a => a.Contains("Xunit") || a == "Fact" || a == "Theory"))
+		// EXXER200: Validate null parameters - return safe default instead of throwing
+		if (attributes is null)
+		{
+			return TestFramework.Unknown;
+		}
+
+		if (attributes.Any(a => a.Contains(xunitFramework) || a == factAttribute || a == theoryAttribute))
 		{
 			return TestFramework.XUnit;
 		}
 
-		if (attributes.Any(a => a.Contains("NUnit") || a == "Test"))
+		if (attributes.Any(a => a.Contains(nunitFramework) || a == testAttribute))
 		{
 			return TestFramework.NUnit;
 		}
 
-		if (attributes.Any(a => a.Contains("Microsoft.VisualStudio.TestTools") || a == "TestMethod"))
+		if (attributes.Any(a => a.Contains(msTestFramework) || a == testMethodAttribute))
 		{
 			return TestFramework.MSTest;
 		}
@@ -167,11 +216,10 @@ public static class PatternDetector
 /// <param name="framework">The detected test framework.</param>
 public class TestAttributeInfo(IReadOnlyList<string> attributeNames, bool hasTestAttributes, TestFramework framework)
 {
-
 	/// <summary>
 	/// Gets the names of the test attributes found.
 	/// </summary>
-	public IReadOnlyList<string> AttributeNames { get; } = attributeNames ?? throw new ArgumentNullException(nameof(attributeNames));
+	public IReadOnlyList<string> AttributeNames { get; } = attributeNames ?? Array.Empty<string>();
 
 	/// <summary>
 	/// Gets a value indicating whether any test attributes were found.
@@ -182,6 +230,11 @@ public class TestAttributeInfo(IReadOnlyList<string> attributeNames, bool hasTes
 	/// Gets the detected test framework.
 	/// </summary>
 	public TestFramework Framework { get; } = framework;
+	
+	/// <summary>
+	/// Gets a value indicating whether the attribute names are valid (not null).
+	/// </summary>
+	public bool IsValid => AttributeNames != null;
 }
 
 /// <summary>
@@ -189,8 +242,23 @@ public class TestAttributeInfo(IReadOnlyList<string> attributeNames, bool hasTes
 /// </summary>
 public enum TestFramework
 {
+	/// <summary>
+	/// Unknown or unsupported test framework.
+	/// </summary>
 	Unknown,
+	
+	/// <summary>
+	/// xUnit test framework.
+	/// </summary>
 	XUnit,
+	
+	/// <summary>
+	/// NUnit test framework.
+	/// </summary>
 	NUnit,
+	
+	/// <summary>
+	/// MSTest test framework.
+	/// </summary>
 	MSTest
 }
